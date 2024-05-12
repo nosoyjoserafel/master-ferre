@@ -1,7 +1,10 @@
 import Producto from "./classes/Producto.js"
+//const leerArch = require("./file-manager.js") -> no funciona en server
 
 //variables globales
 let productos = []
+
+//console.log(leerArch("../files/codigos.txt")) -> no funciona en server
 
 // Obtén todos los campos de entrada y el botón
 let inputs = document.querySelectorAll('input')
