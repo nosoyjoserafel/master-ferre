@@ -1,35 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Ferre Master</title>		
-	</head>
-	<body>		
-		<div class="ingrese datos">
-			<h1>
-				Ingrese los datos del producto
-			</h1>			
-		</div>
-		<br>
-		<div class="campos">
-			ID: <input type="number" min="1">
-			<br>
-			Nombre:<input type="text">
-			<br>			
-			Categoria: <input type="text">
-			<br>
-			Tamaño: <input type="number" min="0.01"> Escala de tamaño: <select id="escala-tamaños"></select>
-			<br>
-			Marca: <input type="text">
-			<br>
-			Precio: <input type="number" min="0.1">
-			<br>	
-			<br>	
-			Descripción: <textarea id="descripcion"></textarea>
-			<br>
-			<button id="registrar">Registrar</button>
-		</div>	
-		<script type="module" src="./js/script.js"></script>
-	</body>
+<html>
+<head>
+    <title>Registro de Producto</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="producto-form">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id"><br>
+        <label for="nombre">Nombre:</label><br>
+        <input type="text" id="nombre" name="nombre"><br>
+        <label for="categoria">Categoría:</label><br>
+        <input type="text" id="categoria" name="categoria"><br>
+        <label for="precio">Precio:</label><br>
+        <input type="text" id="precio" name="precio"><br>
+        <input type="submit" value="Registrar">
+    </form>
+
+    <script>
+        $("#producto-form").submit(function(e) {
+            e.preventDefault();
+
+            var producto = {
+                id: $("#id").val(),
+                nombre: $("#nombre").val(),
+                categoria: $("#categoria").val(),
+                precio: $("#precio").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/registrar",
+                data: JSON.stringify(producto),
+                contentType: "application/json",
+                success: function(data) {
+                    alert("Producto registrado con éxito!");
+                },
+                error: function(data) {
+                    alert("Hubo un error al registrar el producto.");
+                }
+            });
+        });
+    </script>
+</body>
 </html>
