@@ -9,7 +9,17 @@ app.use(express.urlencoded({ extended: true }));
 
 //Respuesta del servidor al entrar directamente a la pagina principal
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/registrar-productos.html'));
+    res.sendFile(path.join(__dirname + '/pages/main.html'));
+});
+
+//Respuesta del servidor al entrar a una pagina y querer volver al main
+app.get('/main', (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/main.html'));
+});
+
+//Respuesta del servidor ante solicitud de registrar producto
+app.get('/registrar-productos', (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/registrar-producto.html'));
 });
 
 //Respuestas del servidor ante peticiones para ir de una pagina a otra
@@ -32,7 +42,7 @@ app.post('/registrar', (req, res) => {
     res.send('Producto registrado con éxito!');
 });
 
-//para buscar productos en la pagina
+//para buscar productos en la pagina (se buscan por su id)
 app.post('/buscar', (req, res) => {
     if (!req.body.id) {
         return res.status(400).send('El campo ID es requerido');
@@ -57,7 +67,7 @@ app.post('/buscar', (req, res) => {
         })
         if(!foundFlag){
             console.log('Producto no encontrado');
-            res.status(404).send('Producto no encontrado')
+            res.status(404).send('Producto no encontrado') //prueba de estado de respuesta
         }
     })
 
