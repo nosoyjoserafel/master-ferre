@@ -5,14 +5,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <form id="buscar-form">
+    <form id="buscar-producto-form">
         <label for="id">ID:</label><br>
         <input type="text" id="id" name="id"><br>      
-        <input type="submit" value="Buscar">  
+        <input type="submit" value="Buscar"> 
+        <br>
+        <br>
+        <a href="/main">Regresar al inicio</a> 
     </form>
 
     <script>
-        $("#buscar-form").submit(function(e) {
+        $("#buscar-producto-form").submit(function(e) {
             e.preventDefault();
 
             var producto = {
@@ -24,7 +27,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "http://localhost:3000/buscar",
+                url: "http://localhost:3000/buscar-producto",
                 data: JSON.stringify(producto),
                 contentType: "application/json"                            
             });

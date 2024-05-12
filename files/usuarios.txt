@@ -1,0 +1,2 @@
+usuario, contraseña, cedula, telefono, direccion
+wqert, ppp, 1234, 1, eee

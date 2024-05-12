@@ -2,3 +2,4 @@ id, nombre, categoria, precio
 1234, martillo, herramienta, 5
 2134, 324w5, 2345, 3245ty
 3243, 1232r, 32re, 1324
+1214, amdfma, 435efw, 12434

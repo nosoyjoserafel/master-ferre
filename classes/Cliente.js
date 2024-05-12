@@ -1,10 +1,9 @@
 import Persona from "./Persona";
 
-class Cliente extends Persona{
-    constructor(nombre, apellido, cedula, direccion, telefono, email, password) {
-        super(nombre, apellido, cedula, direccion, telefono)
+class Cliente extends Persona{ //aun bajo pruebas
+    constructor(nombre, apellido, usuario, cedula, direccion, telefono, email) {
+        super(nombre, apellido, usuario, cedula, direccion, telefono)
         this.email = email
-        this.password = password
     }
 
     toString(){
@@ -14,7 +13,6 @@ Apellido: ${this.apellido}
 Cedula: ${this.cedula}
 Direccion: ${this.direccion}
 Telefono: ${this.telefono}
-Email: ${this.email}
-Password: ${this.password}`
+Email: ${this.email}`
     }
 }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de usuario</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="registrar-usuario-form">
+        <label for="usuario">Usuario:</label><br>
+        <input type="text" id="usuario" name="usuario"><br>
+        <label for="contrasenia">Contraseña:</label><br>
+        <input type="text" id="contrasenia" name="contrasenia"><br>
+        <label for="cedula">Cédula:</label><br>
+        <input type="number" id="cedula" name="cedula"><br>
+        <label for="telefono">Telefono:</label><br>
+        <input type="number" id="telefono" name="telefono"><br>
+        <label for="direccion">Dirección:</label><br>
+        <input type="text" id="direccion" name="direccion"><br>
+        <input type="submit" value="Registrar">
+    </form>
+    <br>
+    <br>
+    <a href="/main">Regresar al inicio</a>
+
+    <script>
+        $("#registrar-usuario-form").submit(function(e) {
+            e.preventDefault();
+
+            var user = {
+                usuario: $("#usuario").val(),
+                contrasenia: $("#contrasenia").val(),
+                cedula: $("#cedula").val(),
+                telefono: $("#telefono").val(),
+                direccion: $("#direccion").val()                
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/registrar-usuario",
+                data: JSON.stringify(user),
+                contentType: "application/json",
+                success: function(data) {
+                    alert("Sus datos han sido registrados con éxito!");
+                },
+                error: function(data) {
+                    alert("Hubo un error al registrarse, intente de nuevo.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

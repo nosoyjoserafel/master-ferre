@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Producto</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="buscar-usuario-form">
+        <label for="cedula">Cédula:</label><br>
+        <input type="number" id="cedula" name="cedula"><br>      
+        <input type="submit" value="Buscar">  
+        <br>
+        <br>
+        <a href="/main">Regresar al inicio</a>
+    </form>
+
+    <script>
+        $("#buscar-usuario-form").submit(function(e) {
+            e.preventDefault();
+
+            var user = {
+                usuario: $("#usuario").val(),
+                contrasenia: $("#contrasenia").val(),
+                cedula: $("#cedula").val(),
+                telefono: $("#telefono").val(),
+                direccion: $("#direccion").val()                
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/buscar-usuario",
+                data: JSON.stringify(user),
+                contentType: "application/json"                            
+            });
+        });
+    </script>
+</body>
+</html>

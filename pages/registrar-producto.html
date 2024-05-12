@@ -5,7 +5,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-    <form id="producto-form">
+    <form id="registrar-producto-form">
         <label for="id">ID:</label><br>
         <input type="text" id="id" name="id"><br>
         <label for="nombre">Nombre:</label><br>
@@ -23,7 +23,7 @@
     <a href="/main">Regresar al inicio</a>
 
     <script>
-        $("#producto-form").submit(function(e) {
+        $("#registrar-producto-form").submit(function(e) {
             e.preventDefault();
 
             var producto = {
@@ -35,7 +35,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "http://localhost:3000/registrar",
+                url: "http://localhost:3000/registrar-producto",
                 data: JSON.stringify(producto),
                 contentType: "application/json",
                 success: function(data) {

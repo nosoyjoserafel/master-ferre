@@ -1,8 +1,8 @@
 import Persona from "./Persona";
 
-class Empleado extends Persona{
-    constructor(nombre, apellido, cedula, direccion, telefono, salario, cargo) {
-        super(nombre, apellido, cedula, direccion, telefono)
+class Empleado extends Persona{ //aun bajo pruebas
+    constructor(nombre, apellido, usuario, cedula, direccion, telefono, salario, cargo) {
+        super(nombre, apellido, usuario, cedula, direccion, telefono)
         this.salario = salario
         this.cargo = cargo
     }
