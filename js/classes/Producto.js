@@ -1,24 +1,23 @@
 export default class Producto {
-    constructor(nombre, precio, marca, categoria,cantidadEnStock, codigo) {
+    constructor(id, nombre, categoria,tamanio, escalaTamanio,marca, descripcion, precio) {
+        this.id = id
         this.nombre = nombre
-        this.precio = precio
-        this.marca = marca
         this.categoria = categoria
-        this.cantidadEnStock = cantidadEnStock
-        this.codigo = codigo	
-    }
-
-    agregarStock(cantidad) {
-        this.cantidadEnStock += cantidad
+        this.tamanio = tamanio
+        this.escalaTamanio = escalaTamanio
+        this.marca = marca
+        this.descripcion = descripcion
+        this.precio = precio
     }
 
     toString(){
         return `Producto
+ID: ${this.id}
 Nombre: ${this.nombre}
-Precio: ${this.precio}$
-Marca: ${this.marca}
 Categoria: ${this.categoria}
-Stock: ${this.cantidadEnStock}
-Codigo: ${this.codigo}`
+Tamaño: ${this.tamanio}${this.escalaTamanio}
+Marca: ${this.marca}
+Descripcion: ${this.descripcion}
+Precio: ${this.precio}`
     }
 }

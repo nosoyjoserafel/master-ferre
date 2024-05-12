@@ -1,16 +1,19 @@
 import Producto from "./classes/Producto.js"
 
+//variables globales
+let productos = []
+
 // Obtén todos los campos de entrada y el botón
 let inputs = document.querySelectorAll('input');
 let button = document.getElementById('registrar');
 
-let codigos = ['Seleccione un código','123', '456', '789', '101', '112', '131', '415', '161', '718']
-let select = document.getElementById('codigos');
+let escalaTamanios = ['mm','cm','m']
+let select = document.getElementById('escala-tamaños');
 
-codigos.forEach(codigo => {
+escalaTamanios.forEach(peso => {
   let option = document.createElement('option');
-  option.value = codigo;
-  option.textContent = codigo;
+  option.value = peso;
+  option.textContent = peso;
   select.appendChild(option);
 });
 
@@ -19,12 +22,13 @@ codigos.forEach(codigo => {
 button.addEventListener('click', function() {
     // Verifica cada campo de entrada
     for (let i = 0; i < inputs.length; i++) {
-        if (inputs[i].value.trim() === ''|| select.value === 'Seleccione un código'){
+        if (inputs[i].value.trim() === ''){
             alert('Todos los campos deben ser llenados');
             return;
         }
     }
 
-    let p = new Producto(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, inputs[4].value, select.value);
+    let p = new Producto(inputs[0].value, inputs[1].value, inputs[2].value, inputs[3].value, select.value, inputs[4].value, inputs[5].value, inputs[6].value);
+    productos.push(p)
     alert("Producto registrado con exito")
 });
