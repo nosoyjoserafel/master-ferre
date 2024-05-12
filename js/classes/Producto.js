@@ -1,13 +1,13 @@
 export default class Producto {
-    constructor(id, nombre, categoria,tamanio, escalaTamanio,marca, descripcion, precio) {
+    constructor(id, nombre, categoria,tamanio, escalaTamanio,marca, precio,descripcion) {
         this.id = id
         this.nombre = nombre
         this.categoria = categoria
         this.tamanio = tamanio
         this.escalaTamanio = escalaTamanio
         this.marca = marca
-        this.descripcion = descripcion
         this.precio = precio
+        this.descripcion = descripcion
     }
 
     toString(){
@@ -17,7 +17,7 @@ Nombre: ${this.nombre}
 Categoria: ${this.categoria}
 Tamaño: ${this.tamanio}${this.escalaTamanio}
 Marca: ${this.marca}
-Descripcion: ${this.descripcion}
-Precio: ${this.precio}`
+Precio: ${this.precio}$
+Descripcion: ${this.descripcion}`
     }
 }
