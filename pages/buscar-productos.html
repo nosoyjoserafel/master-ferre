@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Producto</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="buscar-form">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id"><br>      
+        <input type="submit" value="Buscar">  
+    </form>
+
+    <script>
+        $("#buscar-form").submit(function(e) {
+            e.preventDefault();
+
+            var producto = {
+                id: $("#id").val(),
+                nombre: $("#nombre").val(),
+                categoria: $("#categoria").val(),
+                precio: $("#precio").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/buscar",
+                data: JSON.stringify(producto),
+                contentType: "application/json"                            
+            });
+        });
+    </script>
+</body>
+</html>
