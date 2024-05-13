@@ -1,18 +1,12 @@
-import Persona from "./Persona";
+const Persona = require('./Persona.js')
 
-class Cliente extends Persona{ //aun bajo pruebas
-    constructor(nombre, apellido, usuario, cedula, direccion, telefono, email) {
-        super(nombre, apellido, usuario, cedula, direccion, telefono)
+module.exports = class Cliente extends Persona{ //aun bajo pruebas
+    constructor(nombre, apellido, usuario, contrasenia, cedula, direccion, telefono, email) {
+        super(nombre, apellido, usuario, contrasenia, cedula, direccion, telefono, "Cliente")
         this.email = email
     }
 
     toString(){
-        return `Cliente
-Nombre: ${this.nombre}
-Apellido: ${this.apellido}
-Cedula: ${this.cedula}
-Direccion: ${this.direccion}
-Telefono: ${this.telefono}
-Email: ${this.email}`
+        return `${this.nombre}, ${this.apellido}, ${this.usuario}, ${this.contrasenia}, ${this.cedula}, ${this.telefono}, ${this.direccion}, ${this.email}, ${this.condicion}\n`
     }
 }
