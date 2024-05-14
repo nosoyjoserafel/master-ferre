@@ -89,6 +89,23 @@ app.post('/buscar-producto', (req, res) => {
 
 })
 
+
+app.get('/productos', (req, res) => {
+    fs.readFile(path.join(__dirname, 'files', 'productos.txt'), 'utf8', (err, data) => {
+        if (err) throw err;
+
+        let lineas = data.split('\n'); // divide el contenido por líneas
+        lineas.shift(); // elimina la primera línea (cabecera)
+
+        let productos = lineas.map(linea => {
+            let [id, nombre, categoria, precio] = linea.split(",").map(item=> item.trim())
+            return new Producto(id, nombre, categoria, precio)
+        })
+
+        res.json(productos);
+    })
+})
+
 //para registrar usuarios en la pagina registrar usuario (entregable usuario)
 app.post('/registrar-usuario', (req, res) => {    
     if(!req.body.usuario || !req.body.contrasenia || !req.body.cedula || !req.body.telefono || !req.body.direccion) {        
