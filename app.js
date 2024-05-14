@@ -53,6 +53,7 @@ app.get('/carrito', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/carrito.html'));
 });
 
+
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas
 
 //para registrar productos en la pagina registrar productos (entregable producto)
@@ -121,6 +122,22 @@ app.get('/productos', (req, res) => {
 
 app.get('/catalogo', (req, res) => {
     fs.readFile(path.join(__dirname, 'files', 'catalogo.txt'), 'utf8', (err, data) => {
+        if (err) throw err
+
+        let lineas = data.split('\n'); // divide el contenido por líneas
+        lineas.shift(); // elimina la primera línea (cabecera)
+
+        let productos = lineas.map(linea => {
+            let [id, nombre, categoria, precio] = linea.split(",").map(item=> item.trim())
+            return new Producto(id, nombre, categoria, precio)
+        })
+
+        res.json(productos);
+    });
+});
+
+app.get('/carrito', (req, res) => {
+    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), 'utf8', (err, data) => {
         if (err) throw err
 
         let lineas = data.split('\n'); // divide el contenido por líneas
