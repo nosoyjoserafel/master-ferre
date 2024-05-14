@@ -27,7 +27,7 @@ app.get('/registrar-productos', (req, res) => {
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina buscar producto
-app.get('/buscar-productos', (req, res) => {
+app.get('/buscar-producto', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/buscar-producto.html'));
 });
 
