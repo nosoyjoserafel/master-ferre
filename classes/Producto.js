@@ -7,10 +7,6 @@ module.exports = class Producto {
     }
 
     toString(){
-        return `Producto
-ID: ${this.id}
-Nombre: ${this.nombre}
-Categoria: ${this.categoria}
-Precio: ${this.precio}$`
+        return `${this.id}, ${this.nombre}, ${this.categoria}, ${this.precio}\n`
     }
 }
