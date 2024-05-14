@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro de Producto</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="registrar-producto-form">
+        <label for="id">ID:</label><br>
+        <input type="text" id="id" name="id"><br>        
+        <input type="submit" value="Registrar">
+    </form>
+    <br>
+    <br>
+    <a href="/main">Regresar al inicio</a>
+
+    <script>
+        $("#registrar-producto-form").submit(function(e) {
+            e.preventDefault();
+
+            var producto = {
+                id: $("#id").val(),
+                nombre: $("#nombre").val(),
+                categoria: $("#categoria").val(),
+                precio: $("#precio").val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:3000/registrar-producto-catalogo",
+                data: JSON.stringify(producto),
+                contentType: "application/json",
+                success: function(data) {
+                    alert("Producto registrado en el catágolo con éxito!");
+                },
+                error: function(data) {
+                    alert("Hubo un error al registrar el producto en el catálogo.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

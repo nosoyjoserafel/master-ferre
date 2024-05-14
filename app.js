@@ -5,6 +5,7 @@ const fs = require('fs');
 const Producto = require('./classes/Producto');
 const Cliente = require('./classes/Cliente');
 const Empleado = require('./classes/Empleado');
+const Catalogo = require('./classes/Catalogo');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,6 +27,7 @@ app.get('/registrar-productos', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/registrar-producto.html'));
 });
 
+
 //Respuesta del servidor ante solicitud de ir a pagina buscar producto
 app.get('/buscar-producto', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/buscar-producto.html'));
@@ -39,6 +41,11 @@ app.get('/registrar-usuario', (req, res) => {
 //Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
 app.get('/buscar-usuario', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/buscar-usuario.html'));
+});
+
+//Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
+app.get('/registrar-producto-catalogo', (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/registrar-producto-catalogo.html'));
 });
 
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas
@@ -135,6 +142,38 @@ app.post('/buscar-usuario', (req, res) => {
         }
     })
     
+})
+
+//para buscar productos y registrarlos en el catalogo si existen (entregable catalogo, se buscan por su id)
+app.post('/registrar-producto-catalogo', (req, res) => {
+    if (!req.body.id) {
+        return res.status(400).send('El campo ID es requerido');
+    }
+
+    fs.readFile(path.join(__dirname, 'files', 'productos.txt'), 'utf8', (err, data) => {
+        if (err) throw err;
+
+        let lineas = data.split('\n'); // divide el contenido por líneas
+        lineas.shift(); // elimina la primera línea (cabecera)
+        let foundFlag = false
+
+        lineas.forEach(linea=>{
+            let [id, nombre, categoria, precio] = linea.split(",").map(item=> item.trim())
+            if (id === req.body.id){
+                let producto = new Producto(id, nombre, categoria, precio)
+                fs.appendFile(path.join(__dirname, 'files', 'catalogo.txt'), producto.toString(), (err) => {
+                    if (err) throw err;
+                });
+                foundFlag = true
+                return res.status(200).send('Producto encontrado') //prueba de estado de respuesta
+            }
+        })
+        if(!foundFlag){
+            console.log('Producto no encontrado');
+            return res.status(404).send('Producto no encontrado') //prueba de estado de respuesta
+        }
+    })
+
 })
 
 app.listen(3000, () => {
