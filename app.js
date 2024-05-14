@@ -48,6 +48,11 @@ app.get('/registrar-producto-catalogo', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/registrar-producto-catalogo.html'));
 });
 
+//Respuesta del servidor ante solicitud de ir a pagina de carrito
+app.get('/carrito', (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/carrito.html'));
+});
+
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas
 
 //para registrar productos en la pagina registrar productos (entregable producto)
@@ -113,18 +118,18 @@ app.get('/productos', (req, res) => {
     })
 })
 
-app.get('/productos', (req, res) => {
-    fs.readFile('files/catalogo.txt', 'utf8', (err, data) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error al leer el archivo');
-            return;
-        }
 
-        const productos = data.split('\n').slice(1).map(linea => {
-            const [id, nombre, categoria, precio] = linea.split(', ');
-            return { id, nombre, categoria, precio };
-        });
+app.get('/catalogo', (req, res) => {
+    fs.readFile(path.join(__dirname, 'files', 'catalogo.txt'), 'utf8', (err, data) => {
+        if (err) throw err
+
+        let lineas = data.split('\n'); // divide el contenido por líneas
+        lineas.shift(); // elimina la primera línea (cabecera)
+
+        let productos = lineas.map(linea => {
+            let [id, nombre, categoria, precio] = linea.split(",").map(item=> item.trim())
+            return new Producto(id, nombre, categoria, precio)
+        })
 
         res.json(productos);
     });

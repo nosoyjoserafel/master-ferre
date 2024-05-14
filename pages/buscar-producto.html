@@ -122,7 +122,7 @@
                 .then(response => response.json())
                 .then(productos => {
                     let tbody = document.querySelector('tbody');
-                    productos.forEach(producto => {
+                    productos.slice(0, productos.length - 1).forEach(producto => {
                         let tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${producto.id}</td>
