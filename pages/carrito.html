@@ -116,7 +116,7 @@
 
                 if (productResponse.ok) {
                     const productsData = await productResponse.json();
-                    const productData = productsData.find(product => producto.idProducto === parseInt(product.id));
+                    const productData = productsData.find(product => producto.idProducto === product.id);
                     console.log(productData);
                     // Create the HTML element for the product
                     const productCard = document.createElement('div');
