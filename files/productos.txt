@@ -3,4 +3,6 @@ id, nombre, categoria, precio
 2134, 324w5, 2345, 3245ty
 3243, 1232r, 32re, 1324
 1214, amdfma, 435efw, 12434
-456, pala, herramienta, 10
+456, pala, herramienta, 100001, Destornillador, Herramienta, 3
+1001, Destornillador, Herramienta, 3
+1234, Alicate, Herramienta, 1
