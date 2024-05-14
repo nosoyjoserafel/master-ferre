@@ -113,6 +113,23 @@ app.get('/productos', (req, res) => {
     })
 })
 
+app.get('/productos', (req, res) => {
+    fs.readFile('files/catalogo.txt', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error al leer el archivo');
+            return;
+        }
+
+        const productos = data.split('\n').slice(1).map(linea => {
+            const [id, nombre, categoria, precio] = linea.split(', ');
+            return { id, nombre, categoria, precio };
+        });
+
+        res.json(productos);
+    });
+});
+
 //para registrar usuarios en la pagina registrar usuario (entregable usuario)
 app.post('/registrar-usuario', (req, res) => {    
     if(!req.body.usuario || !req.body.contrasenia || !req.body.cedula || !req.body.telefono || !req.body.direccion) {        
