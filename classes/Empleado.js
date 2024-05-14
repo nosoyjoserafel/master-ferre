@@ -1,8 +1,8 @@
-import Persona from "./Persona";
+const Persona = require('./Persona.js')
 
-class Empleado extends Persona{ //aun bajo pruebas
+module.exports = class Empleado extends Persona{ //aun bajo pruebas
     constructor(nombre, apellido, usuario, cedula, direccion, telefono, salario, cargo) {
-        super(nombre, apellido, usuario, cedula, direccion, telefono)
+        super(nombre, apellido, usuario, cedula, direccion, telefono, "emlpeado")
         this.salario = salario
         this.cargo = cargo
     }

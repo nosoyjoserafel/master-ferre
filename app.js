@@ -3,7 +3,8 @@ const app = express();
 const path = require('path');
 const fs = require('fs');
 const Producto = require('./classes/Producto');
-const Persona = require('./classes/Persona');
+const Cliente = require('./classes/Cliente');
+const Empleado = require('./classes/Empleado');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -94,18 +95,15 @@ app.post('/registrar-usuario', (req, res) => {
         return res.status(400).send('Todos los campos son requeridos, intente de nuevo');
     }
 
-    const usuario = `${req.body.usuario}, ${req.body.contrasenia}, ${req.body.cedula}, ${req.body.telefono}, ${req.body.direccion}\n`;
+    const usuario = new Cliente(req.body.nombre,req.body.apellido,req.body.usuario, req.body.contrasenia, req.body.cedula, req.body.direccion, req.body.telefono, req.body.email);
 
-    fs.appendFile(path.join(__dirname, 'files', 'usuarios.txt'), usuario, (err) => {
+    fs.appendFile(path.join(__dirname, 'files', 'usuarios.txt'), usuario.toString(), (err) => {
         if (err) throw err;
     });
 
     res.send('Usuario registrado con éxito!');
 });
 
-app.listen(3000, () => {
-    console.log('Servidor escuchando en el puerto https://localhost:3000');
-});
 
 //para buscar usuarios en la pagina buscar usuarios 
 //(entregable usuarios, se buscan por su cedula de momento)
@@ -113,20 +111,20 @@ app.post('/buscar-usuario', (req, res) => {
     if (!req.body.cedula) {
         return res.status(400).send('El campo cedula es requerido');
     }
-
+    
     fs.readFile(path.join(__dirname, 'files', 'usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
-
+        
         let lineas = data.split('\n'); // divide el contenido por líneas
         lineas.shift(); // elimina la primera línea (cabecera)
         let foundFlag = false
-
+        
         lineas.forEach(linea=>{            
             let [usuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item=> item.trim())            
             if (cedula === req.body.cedula){
                 let user = new Producto(usuario, contrasenia, cedula, telefono, direccion)
                 console.log(user)   //Imprime el usuario solicitado por consola
-                                        //(solo para pruebas, no debe imprimir la contraseña)
+                //(solo para pruebas, no debe imprimir la contraseña)
                 foundFlag = true
                 return res.status(200).send('Usuario encontrado') //prueba de estado de respuesta
             }
@@ -136,5 +134,9 @@ app.post('/buscar-usuario', (req, res) => {
             return res.status(404).send('Usuario no encontrado') //prueba de estado de respuesta
         }
     })
-
+    
 })
+
+app.listen(3000, () => {
+    console.log('Servidor escuchando en el puerto http://localhost:3000');
+});
