@@ -1,6 +1,2 @@
 nombre, apellido, usuario, contraseña, cedula, telefono, direccion, email, condicion
-Matias, Silveira, matias_404, 123456M&$, 4, 2, 123rf2q, correo@gmail.com, Cliente
-
-nombre, apellido, usuario, contraseña, cedula, telefono, direccion, email, condicion
-Matias, Silveira, matias_404, 123456M&$, 4, 2, 123rf2q, correo@gmail.com, ClienteMatias, Silveira, matias_404, 123456789, 31020586, 04142696062, av. tal, jrmatiassilveirat1@gmail.com, Cliente
-Matias, Silveira, matias_404, 123456789, 123456, 123456, av. tal, jrmatiassilveirat1@gmail.com, Cliente
+Matias, Silveria, matias123, 123456, 123456, 123456, av. x, matias@gmail.com, Cliente
