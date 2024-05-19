@@ -15,7 +15,10 @@ app.use(express.static('scripts'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//Respuestas del servidor ante peticiones para ir de una pagina a otra
+//Respuestas del servidor cuando se entra por primera vez
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/pages/main.html'));
+});
 
 //Respuesta del servidor al entrar a una pagina y querer volver al main
 app.get('/main', (req, res) => {
