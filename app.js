@@ -7,15 +7,18 @@ const Cliente = require('./classes/Cliente');
 const Empleado = require('./classes/Empleado');
 const Catalogo = require('./classes/Catalogo');
 
+app.use(express.static('public'));
+app.use(express.static('files'));
+app.use(express.static('pages'));
+app.use(express.static('classes'));
+app.use(express.static('scripts'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//Respuesta del servidor al entrar directamente a la pagina principal
+//Respuestas del servidor cuando se entra por primera vez
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/pages/main.html'));
 });
-
-//Respuestas del servidor ante peticiones para ir de una pagina a otra
 
 //Respuesta del servidor al entrar a una pagina y querer volver al main
 app.get('/main', (req, res) => {
@@ -142,26 +145,9 @@ app.post('/registrar-usuario', (req, res) => {
         return res.status(400).send('Todos los campos son requeridos, intente de nuevo');
     }
 
-    const usuario = new Cliente(req.body.nombre, req.body.apellido, req.body.usuario, req.body.contrasenia, req.body.cedula, req.body.direccion, req.body.telefono, req.body.email);
+    const usuario = `${req.body.nombre}, ${req.body.apellido}, ${req.body.usuario}, ${req.body.contrasenia}, ${req.body.cedula}, ${req.body.direccion}, ${req.body.telefono}, ${req.body.email}\n`;
 
-    fs.appendFile(path.join(__dirname, 'files', 'usuarios.txt'), usuario.toString(), (err) => {
-        if (err) throw err;
-    });
-
-    const carrito = new carrito(usuario);
-
-    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), 'utf8', (err, data) => {
-        if (err) throw err;
-
-        const carritos = JSON.parse(data);
-        carritos.push(carrito);
-        const carritosString = JSON.stringify(carritos);
-        fs.writeFile(path.join(__dirname, 'files', 'carrito.txt'), carritosString, (err) => {
-            if (err) throw err;
-        });
-    })
-
-    fs.appendFile(path.join(__dirname, 'files', 'carrito.txt'), usuario.toString(), (err) => {
+    fs.appendFile(path.join(__dirname, 'files', 'usuarios.txt'), usuario, (err) => {
         if (err) throw err;
     });
 
