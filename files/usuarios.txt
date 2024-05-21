@@ -1,2 +1,3 @@
 nombre, apellido, usuario, contraseña, cedula, telefono, direccion, email, condicion
 Matias, Silveira, matias123, 123, 123, 456, x, matias@gmail.com, Cliente
+Matias, Silveira, matias1234, 123, 1234, 123, x, matias1@gmail.com, Cliente

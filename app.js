@@ -6,6 +6,7 @@ const Producto = require('./classes/Producto');
 const Cliente = require('./classes/Cliente');
 const Empleado = require('./classes/Empleado');
 const Catalogo = require('./classes/Catalogo');
+const e = require('express');
 
 app.use(express.static('public'));
 app.use(express.static('files'));
@@ -155,9 +156,14 @@ app.post('/registrar-usuario', (req, res) => {
         lines.shift(); // elimina la primera línea (cabecera)
         for (let line of lines) {
             let [nombre, apellido, usuario, contraseña, cedula, telefono, direccion, email] = line.split(',').map(item => item.trim());
-            if (usuario === newUser.usuario || cedula === newUser.cedula || email === newUser.email || telefono === newUser.telefono) {
-                return res.status(400).send('Usuario ya existe');
-            }
+            if (email === newUser.email)
+                return res.status(400).send('Error, el correo ingresado ya ha sido registrado.\nIntentelo de nuevo');
+            else if (usuario === newUser.usuario)
+                return res.status(400).send('Error, el usuario ingresado ya existe.\nIntentelo de nuevo');
+            else if (cedula === newUser.cedula)
+                return res.status(400).send('Error, la cedula ingresada ya existe.\nIntentelo de nuevo');
+            else if (telefono === newUser.telefono)
+                return res.status(400).send('Error, el telefono ingresado ya ha sido registrado.\nIntentelo de nuevo');
         }
 
         // Si llegamos aquí, el usuario no existe, así que agregamos el nuevo usuario
