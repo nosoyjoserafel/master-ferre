@@ -7,7 +7,20 @@ const Cliente = require('./classes/Cliente');
 const Empleado = require('./classes/Empleado');
 const Catalogo = require('./classes/Catalogo');
 const e = require('express');
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    filename: function(req, file, cb) {
+        console.log(file.originalname);
+      cb(null, file.originalname)
+    }
+  });
+  
+const upload = multer({ storage: storage });
 
+app.use(multer({ dest: 'uploads/' }).single('imagen'));
 app.use(express.static('public'));
 app.use(express.static('files'));
 app.use(express.static('pages'));
@@ -61,7 +74,7 @@ app.get('/carrito', (req, res) => {
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas
 
 //para registrar productos en la pagina registrar productos (entregable producto)
-app.post('/registrar-producto', (req, res) => {
+app.post('/registrar-producto', upload.single("imagen"),(req, res) => {
     if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio) {
         return res.status(400).send('Todos los campos son requeridos');
     }
@@ -71,6 +84,8 @@ app.post('/registrar-producto', (req, res) => {
     fs.appendFile(path.join(__dirname, 'files', 'productos.txt'), producto, (err) => {
         if (err) throw err;
     });
+
+    //console.log(req.file);
 
     res.send('Producto registrado con éxito!');
 });
