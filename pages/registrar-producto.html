@@ -121,8 +121,14 @@
                 success: function(data) {
                     alert("Producto registrado con éxito!");
                 },
-                error: function(data) {
-                    alert("Hubo un error al registrar el producto.");
+                error: function(jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status === 400) {
+                        // Si el servidor envió un error 400, muestra el mensaje en un alerta
+                        alert(jqXHR.responseText);
+                    } else {
+                        // Si el servidor envió un error diferente, puedes manejarlo aquí
+                        alert('Ocurrió un error al registrar el usuario');
+                    }
                 }
             });
         });
