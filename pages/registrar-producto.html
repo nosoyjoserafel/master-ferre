@@ -39,7 +39,7 @@
         </div>
     </nav>
     
-    <form class="container col-md-8 offset-md-2 bg-light" id="registrar-producto-form">
+    <form action="/registrar-producto" class="container col-md-8 offset-md-2 bg-light" id="registrar-producto-form" method="post" enctype="multipart/form-data">
         <div class="col-md-10 offset-md-1">
             <div class="row">
                 <div class="col-md-6 form-group">
@@ -110,7 +110,7 @@
                 id: $("#id").val(),
                 nombre: $("#nombre").val(),
                 categoria: $("#categoria").val(),
-                precio: $("#precio").val()
+                precio: $("#precio").val(),
             };
 
             $.ajax({

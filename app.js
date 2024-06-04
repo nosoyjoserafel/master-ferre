@@ -7,18 +7,16 @@ const Cliente = require('./classes/Cliente');
 const Empleado = require('./classes/Empleado');
 const Catalogo = require('./classes/Catalogo');
 const e = require('express');
+const mimeTypes = require('mime-types');
 const multer = require('multer');
 const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, 'uploads/')
-    },
+    destination: './uploads',
     filename: function(req, file, cb) {
-        console.log(file.originalname);
-      cb(null, file.originalname)
+        cb(null, `${file.originalname}.${mimeTypes.extension(file.mimetype)}`)
     }
   });
   
-const upload = multer({ storage: storage });
+const upload = multer({storage: storage});
 
 app.use(multer({ dest: 'uploads/' }).single('imagen'));
 app.use(express.static('public'));
@@ -84,8 +82,6 @@ app.post('/registrar-producto', upload.single("imagen"),(req, res) => {
     fs.appendFile(path.join(__dirname, 'files', 'productos.txt'), producto, (err) => {
         if (err) throw err;
     });
-
-    //console.log(req.file);
 
     res.send('Producto registrado con éxito!');
 });
