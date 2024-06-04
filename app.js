@@ -79,11 +79,23 @@ app.post('/registrar-producto', upload.single("imagen"),(req, res) => {
 
     const producto = `${req.body.id}, ${req.body.nombre}, ${req.body.categoria}, ${req.body.precio}\n`;
 
-    fs.appendFile(path.join(__dirname, 'files', 'productos.txt'), producto, (err) => {
+    fs.readFile(path.join(__dirname, 'files','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
+
+        const lines = data.split('\n');
+        lines.shift(); // elimina la primera línea (cabecera)
+        for (let line of lines) {
+            let [id] = line.split(',').map(item => item.trim());
+            if (id === req.body.id)
+                return res.status(400).send('Error, el ID ingresado ya ha sido registrado para otro producto.\nIntentelo de nuevo');           
+        }
+        fs.appendFile(path.join(__dirname, 'files', 'productos.txt'), producto, (err) => {
+            if (err) throw err;
+        });
+    
+        res.send('Producto registrado con éxito!');
     });
 
-    res.send('Producto registrado con éxito!');
 });
 
 //para buscar productos en la pagina buscar productos (entregable producto, se buscan por su id)
