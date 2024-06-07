@@ -4,4 +4,3 @@ id, nombre, categoria, precio
 1001, Destornillador, Herramienta, 3
 1234, Alicate, Herramienta, 1
 1233, Tenaza, Herramienta, 10
-1, pepe, pepe, 1

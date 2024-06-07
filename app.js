@@ -2,15 +2,15 @@ const express = require('express');
 const app = express();
 const path = require('node:path');
 const fs = require('node:fs');
-const Producto = require('./classes/Producto');
-const Cliente = require('./classes/Cliente');
-const Empleado = require('./classes/Empleado');
-const Catalogo = require('./classes/Catalogo');
+const Producto = require('./src/backend/services/Producto');
+const Cliente = require('./src/backend/services/Cliente');
+const Empleado = require('./src/backend/services/Empleado');
+const Catalogo = require('./src/backend/services/Catalogo');
 const e = require('express');
 const mimeTypes = require('mime-types');
 const multer = require('multer');
 const storage = multer.diskStorage({
-    destination: './uploads',
+    destination: './src/backend/uploads',
     filename: function(req, file, cb) {
         cb(null, `${file.originalname}.${mimeTypes.extension(file.mimetype)}`)
     }
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
   
 const upload = multer({storage: storage});
 
-app.use(multer({ dest: 'uploads/' }).single('imagen'));
+app.use(multer({ dest: './src/backend/uploads' }).single('imagen'));
 app.use(express.static('public'));
 app.use(express.static('files'));
 app.use(express.static('pages'));
@@ -29,43 +29,43 @@ app.use(express.urlencoded({ extended: true }));
 
 //Respuestas del servidor cuando se entra por primera vez
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/main.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
 //Respuesta del servidor al entrar a una pagina y querer volver al main
 app.get('/main', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/main.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina registrar producto
 app.get('/registrar-productos', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/registrar-producto.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto.html'));
 });
 
 
 //Respuesta del servidor ante solicitud de ir a pagina buscar producto
 app.get('/buscar-producto', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/buscar-producto.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-producto.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar usuario
 app.get('/registrar-usuario', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/registrar-usuario.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-usuario.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
 app.get('/buscar-usuario', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/buscar-usuario.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
 app.get('/registrar-producto-catalogo', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/registrar-producto-catalogo.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto-catalogo.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de carrito
 app.get('/carrito', (req, res) => {
-    res.sendFile(path.join(__dirname + '/pages/carrito.html'));
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/carrito.html'));
 });
 
 
@@ -79,7 +79,7 @@ app.post('/registrar-producto', upload.single("imagen"),(req, res) => {
 
     const producto = `${req.body.id}, ${req.body.nombre}, ${req.body.categoria}, ${req.body.precio}\n`;
 
-    fs.readFile(path.join(__dirname, 'files','productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         const lines = data.split('\n');
@@ -89,7 +89,7 @@ app.post('/registrar-producto', upload.single("imagen"),(req, res) => {
             if (id === req.body.id)
                 return res.status(400).send('Error, el ID ingresado ya ha sido registrado para otro producto.\nIntentelo de nuevo');           
         }
-        fs.appendFile(path.join(__dirname, 'files', 'productos.txt'), producto, (err) => {
+        fs.appendFile(path.join(__dirname, 'src','backend','data','productos.txt'), producto, (err) => {
             if (err) throw err;
         });
     
@@ -104,7 +104,7 @@ app.post('/buscar-producto', (req, res) => {
         return res.status(400).send('El campo ID es requerido');
     }
 
-    fs.readFile(path.join(__dirname, 'files', 'productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
@@ -131,7 +131,7 @@ app.post('/buscar-producto', (req, res) => {
 
 
 app.get('/productos', (req, res) => {
-    fs.readFile(path.join(__dirname, 'files', 'productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
@@ -148,7 +148,7 @@ app.get('/productos', (req, res) => {
 
 
 app.get('/catalogo', (req, res) => {
-    fs.readFile(path.join(__dirname, 'files', 'catalogo.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','catalogo.txt'), 'utf8', (err, data) => {
         if (err) throw err
 
         let lineas = data.split('\n'); // divide el contenido por líneas
@@ -172,7 +172,7 @@ app.post('/registrar-usuario', (req, res) => {
     const pageBody = req.body;
     const newUser = new Cliente(pageBody.nombre,pageBody.apellido,pageBody.usuario,pageBody.contrasenia, pageBody.cedula, pageBody.direccion, pageBody.telefono, pageBody.email);
 
-    fs.readFile(path.join(__dirname, 'files','usuarios.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         const lines = data.split('\n');
@@ -190,7 +190,7 @@ app.post('/registrar-usuario', (req, res) => {
         }
 
         // Si llegamos aquí, el usuario no existe, así que agregamos el nuevo usuario
-        fs.appendFile(path.join(__dirname, 'files','usuarios.txt'), newUser.toString(), (err) => {
+        fs.appendFile(path.join(__dirname, 'src','backend','data','usuarios.txt'), newUser.toString(), (err) => {
             if (err) throw err;
             res.status(200).send('Usuario registrado con éxito');
         });
@@ -205,7 +205,7 @@ app.post('/buscar-usuario', (req, res) => {
         return res.status(400).send('El campo cedula es requerido');
     }
 
-    fs.readFile(path.join(__dirname, 'files', 'usuarios.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
@@ -236,7 +236,7 @@ app.post('/registrar-producto-catalogo', (req, res) => {
         return res.status(400).send('El campo ID es requerido');
     }
 
-    fs.readFile(path.join(__dirname, 'files', 'productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
@@ -247,7 +247,7 @@ app.post('/registrar-producto-catalogo', (req, res) => {
             let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
             if (id === req.body.id) {
                 let producto = new Producto(id, nombre, categoria, precio)
-                fs.appendFile(path.join(__dirname, 'files', 'catalogo.txt'), producto.toString(), (err) => {
+                fs.appendFile(path.join(__dirname, 'src','backend','data','catalogo.txt'), producto.toString(), (err) => {
                     if (err) throw err;
                 });
                 foundFlag = true
@@ -265,7 +265,7 @@ app.post('/registrar-producto-catalogo', (req, res) => {
 //Ingresar producto al carrito
 app.post('/AddToCart', (req, res) => {
     const { usuario, idProducto, cantidad } = req.body;
-    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -279,7 +279,7 @@ app.post('/AddToCart', (req, res) => {
                 carritos.push({ usuario, productos: [{ idProducto, cantidad }] });
             }
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, 'files', 'carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, 'src','backend','data','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }
@@ -292,7 +292,7 @@ app.post('/AddToCart', (req, res) => {
 //Ver carrito
 app.post('/getCart', (req, res) => {
     const { usuarioSolicitud } = req.body;
-    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -309,7 +309,7 @@ app.post('/getCart', (req, res) => {
 //Modificar Carrito recibo en el body un usuarioSolicitud
 app.put('/modifyCart', (req, res) => {
     const { usuarioSolicitud } = req.body;
-    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -320,7 +320,7 @@ app.put('/modifyCart', (req, res) => {
                 return { idProducto: producto.idProducto, cantidad: producto.cantidad + 1 };
             });
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, 'files', 'carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, 'src','backend','data','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }
@@ -333,7 +333,7 @@ app.put('/modifyCart', (req, res) => {
 //Eliminar producto del carrito
 app.delete('/deleteFromCart', (req, res) => {
     const { usuarioSolicitud, idProducto } = req.body;
-    fs.readFile(path.join(__dirname, 'files', 'carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, 'src','backend','data','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -342,7 +342,7 @@ app.delete('/deleteFromCart', (req, res) => {
             const carrito = carritos.filter((carrito) => carrito.usuario === usuarioSolicitud)[0];
             carrito.productos = carrito.productos.filter((producto) => producto.idProducto !== idProducto);
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, 'files', 'carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, 'src','backend','data','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }
