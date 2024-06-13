@@ -15,9 +15,9 @@ function resgistrarProductoCatalogo(req, res){
         let foundFlag = false
 
         lineas.forEach(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
+            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
             if (id === req.body.id) {
-                let producto = new Producto(id, nombre, categoria, precio)
+                let producto = new Producto(id, nombre, categoria, precio, imagen)
                 fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto.toString(), (err) => {
                     if (err) throw err;
                 });
@@ -41,8 +41,8 @@ function mostrarProductoCatalogo(req, res){
         lineas.shift(); // elimina la primera línea (cabecera)
 
         let productos = lineas.map(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
-            return new Producto(id, nombre, categoria, precio)
+            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
+            return new Producto(id, nombre, categoria, precio, imagen)
         })
 
         res.json(productos);

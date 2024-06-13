@@ -1,5 +1,4 @@
-id, nombre, categoria, precio
-1234, martillo, herramienta, 5
-1233, Tenaza, Herramienta, 10
-2134, 324w5, 2345, 3245ty
-1233, Tenaza, Herramienta, 10
+id, nombre, categoria, precio, imagen
+1234, Destornillador, herramienta, 5, images/destornillador.png
+1233, Tenaza, Herramienta, 10, images/tenaza.png
+2134, Llave Inglesa, Herramienta, 15, images/llave-inglesa.png

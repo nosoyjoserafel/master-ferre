@@ -3,11 +3,11 @@ const path = require('path');
 const Producto = require('../services/Producto');
 
 function resgistrarProducto(req, res) {
-    if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio) {
+    if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio || !req.body.imagen) {
         return res.status(400).send('Todos los campos son requeridos');
     }
 
-    const producto = `${req.body.id}, ${req.body.nombre}, ${req.body.categoria}, ${req.body.precio}\n`;
+    const producto = `${req.body.id}, ${req.body.nombre}, ${req.body.categoria}, ${req.body.precio}, ${req.body.imagen}\n`;
 
     fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
@@ -40,9 +40,9 @@ function buscarProducto(req, res){
         let foundFlag = false
 
         lineas.forEach(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
+            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
             if (id === req.body.id) {
-                let producto = new Producto(id, nombre, categoria, precio)
+                let producto = new Producto(id, nombre, categoria, precio, imagen)
                 foundFlag = true
                 return res.status(200).send('Producto encontrado')
             }
@@ -62,8 +62,8 @@ function mostrarProducto(req, res){
         lineas.shift(); // elimina la primera línea (cabecera)
 
         let productos = lineas.map(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
-            return new Producto(id, nombre, categoria, precio)
+            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
+            return new Producto(id, nombre, categoria, precio, imagen)
         })
 
         res.json(productos);

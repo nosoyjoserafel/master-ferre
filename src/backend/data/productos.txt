@@ -1,6 +1,6 @@
-id, nombre, categoria, precio
-1234, martillo, herramienta, 5
-4456, pala, herramienta, 1
-1001, Destornillador, Herramienta, 3
-1234, Alicate, Herramienta, 1
-1233, Tenaza, Herramienta, 10
+id, nombre, categoria, precio, imagen
+1234, Destornillador, herramienta, 5, images/destornillador.png
+1233, Tenaza, Herramienta, 10, images/tenaza.png
+2134, Llave Inglesa, Herramienta, 15, images/llave-inglesa.png
+1234, Alicate, Herramienta, 1, tenaza.png
+1233, Tenaza, Herramienta, 10, tenaza.png
