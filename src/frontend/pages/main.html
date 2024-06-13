@@ -18,7 +18,7 @@
   <body>
     <nav class="container navbar navbar-expand-lg navbar-light">
       <a class="navbar-brand" href="/main">
-        <img src="../assets/imgs/logo.png" height="30" alt="Logo" />
+        <img src="logo.png" height="30" alt="Logo" />
       </a>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul id="enlaces" class="navbar-nav">
@@ -108,16 +108,16 @@
             const card = document.createElement("div");
             card.className = "col-md-4";
             card.innerHTML = `
-        <div class="card">
-          <img src="../assets/imgs/default-product-image.png" class="card-img-top" alt="Product Image">
-          <div class="card-body">
-            <h5 class="card-title">${producto.nombre}</h5>
-            <p class="card-text">${producto.categoria}</p>
-            <p class="card-text">Price: $${producto.precio}</p>
-            <button class="btn btn-primary add-to-cart-btn"><i class="fas fa-plus"></i> Add to Cart</button>
-          </div>
-        </div>
-      `;
+              <div class="card">
+                <img src="default-product-image.png" class="card-img-top" alt="Product Image">
+                <div class="card-body">
+                  <h5 class="card-title">${producto.nombre}</h5>
+                  <p class="card-text">${producto.categoria}</p>
+                  <p class="card-text">Price: $${producto.precio}</p>
+                  <button class="btn btn-primary add-to-cart-btn"><i class="fas fa-plus"></i> Add to Cart</button>
+                </div>
+              </div>
+            `;
             row.appendChild(card);
             count++;
 
