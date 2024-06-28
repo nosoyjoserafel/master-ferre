@@ -48,18 +48,26 @@ function buscarUsuario(req, res){
         let foundFlag = false
 
         lineas.forEach(linea => {
-            let [usuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
+            let [nombre,apellido, usuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
             if (cedula === req.body.cedula) {
-                let user = new Producto(usuario, contrasenia, cedula, telefono, direccion)
-                console.log(user)   //Imprime el usuario solicitado por consola
-                //(solo para pruebas, no debe imprimir la contraseña)
-                foundFlag = true
-                return res.status(200).send('Usuario encontrado') //prueba de estado de respuesta
+                let user = new Cliente(nombre, apellido, usuario, contrasenia, cedula, telefono, direccion)                
+                let userNameElement = req.body.getElementById('userName');
+                if (!userNameElement) {
+                    userNameElement = req.body.createElement('div');
+                    userNameElement.id = 'userName';
+                    nameElement.style = req.body.createElement('p');
+                    nameElement.id = 'name';
+                    nameElement.textContent = user.nombre;
+                    userNameElement.appendChild(nameElement);
+                    req.body.appendChild(userNameElement);
+                }
+                userNameElement.textContent = user.name;
+                return res.status(200).send("Usuario encontrado");
             }
         })
         if (!foundFlag) {
             console.log('Usuario no encontrado');
-            return res.status(404).send('Usuario no encontrado') //prueba de estado de respuesta
+            return res.status(404).send('Usuario no encontrado');
         }
     })
 }
