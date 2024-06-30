@@ -35,41 +35,22 @@ function registrarUsuario(req, res) {
     });
 }
 
-function buscarUsuario(req, res){
-    if (!req.body.cedula) {
-        return res.status(400).send('El campo cedula es requerido');
-    }
-
+function buscarUsuario(cedulaBuscada){   
     fs.readFile(path.join(__dirname, '..','data','usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
         lineas.shift(); // elimina la primera línea (cabecera)
-        let foundFlag = false
 
-        lineas.forEach(linea => {
-            let [nombre,apellido, usuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
-            if (cedula === req.body.cedula) {
-                let user = new Cliente(nombre, apellido, usuario, contrasenia, cedula, telefono, direccion)                
-                let userNameElement = req.body.getElementById('userName');
-                if (!userNameElement) {
-                    userNameElement = req.body.createElement('div');
-                    userNameElement.id = 'userName';
-                    nameElement.style = req.body.createElement('p');
-                    nameElement.id = 'name';
-                    nameElement.textContent = user.nombre;
-                    userNameElement.appendChild(nameElement);
-                    req.body.appendChild(userNameElement);
-                }
-                userNameElement.textContent = user.name;
-                return res.status(200).send("Usuario encontrado");
+        lineas.map(linea => {
+            let [nombre,apellido, nombreUsuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
+            if (cedula === cedulaBuscada) {  
+                console.log('Usuario encontrado')              
+                return new Cliente(nombre, apellido, nombreUsuario, contrasenia, cedula, telefono, direccion)                                                
             }
         })
-        if (!foundFlag) {
-            console.log('Usuario no encontrado');
-            return res.status(404).send('Usuario no encontrado');
-        }
     })
+    return null
 }
 
 module.exports = {
