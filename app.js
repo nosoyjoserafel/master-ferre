@@ -48,7 +48,14 @@ app.get('/registrar-usuario', (req, res) => {
 
 //Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
 app.get('/buscar-usuario', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
+    const cedula = req.query.cedula; // Obtiene el parámetro de consulta 'cedula'
+    if (cedula) {    
+        const usuario = usuarioController.buscarUsuario(cedula) // da problema
+        console.log(`Estos son los datos del usuario: ${usuario}`)
+        res.json(usuario);
+    } else {
+        res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
+    }
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
@@ -78,10 +85,6 @@ app.get('/catalogo', catalogoController.mostrarProductoCatalogo);
 
 //para registrar usuarios en la pagina registrar usuario (entregable usuario)
 app.post('/registrar-usuario', usuarioController.registrarUsuario);
-
-//para buscar usuarios en la pagina buscar usuarios 
-//(entregable usuarios, se buscan por su cedula de momento)
-app.post('/buscar-usuario', usuarioController.buscarUsuario);
 
 //Agregar producto al carrito
 app.post('/AddToCart', carritoController.agregarProductoCarrito);

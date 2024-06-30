@@ -49,6 +49,33 @@ function mostrarProductoCatalogo(req, res){
     });
 }
 
+function modificarProductoCatalogo(req, res){
+    if (!req.body.id) {
+        return res.status(400).send('El campo ID es requerido');
+    }    
+
+    let lineas = data.split('\n'); // divide el contenido por líneas
+    lineas.shift(); // elimina la primera línea (cabecera)
+    let foundFlag = false
+
+    lineas.forEach(linea => {
+    let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
+        if (id === req.body.id) {
+            let producto = new Producto(id, nombre, categoria, precio)
+            fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto.toString(), (err) => {
+                if (err) throw err;
+            });
+            foundFlag = true
+            return res.status(200).send('Producto encontrado') //prueba de estado de respuesta
+        }
+    })
+    if (!foundFlag) {
+        console.log('Producto no encontrado');
+        return res.status(404).send('Producto no encontrado') //prueba de estado de respuesta
+    }
+
+}
+
 module.exports = {
     resgistrarProductoCatalogo,
     mostrarProductoCatalogo

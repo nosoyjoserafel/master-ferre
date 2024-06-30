@@ -35,33 +35,22 @@ function registrarUsuario(req, res) {
     });
 }
 
-function buscarUsuario(req, res){
-    if (!req.body.cedula) {
-        return res.status(400).send('El campo cedula es requerido');
-    }
-
+function buscarUsuario(cedulaBuscada){   
     fs.readFile(path.join(__dirname, '..','data','usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
         lineas.shift(); // elimina la primera línea (cabecera)
-        let foundFlag = false
 
-        lineas.forEach(linea => {
-            let [usuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
-            if (cedula === req.body.cedula) {
-                let user = new Producto(usuario, contrasenia, cedula, telefono, direccion)
-                console.log(user)   //Imprime el usuario solicitado por consola
-                //(solo para pruebas, no debe imprimir la contraseña)
-                foundFlag = true
-                return res.status(200).send('Usuario encontrado') //prueba de estado de respuesta
+        lineas.map(linea => {
+            let [nombre,apellido, nombreUsuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
+            if (cedula === cedulaBuscada) {  
+                console.log('Usuario encontrado')              
+                return new Cliente(nombre, apellido, nombreUsuario, contrasenia, cedula, telefono, direccion)                                                
             }
         })
-        if (!foundFlag) {
-            console.log('Usuario no encontrado');
-            return res.status(404).send('Usuario no encontrado') //prueba de estado de respuesta
-        }
     })
+    return null
 }
 
 module.exports = {
