@@ -27,31 +27,32 @@ function resgistrarProducto(req, res) {
     });
 }
 
-function buscarProducto(req, res){
-    if (!req.body.id) {
-        return res.status(400).send('El campo ID es requerido');
-    }
+function leerArchivoComoPromesa(rutaArchivo) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    });
+}
 
-    fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
-        if (err) throw err;
-
-        let lineas = data.split('\n'); // divide el contenido por líneas
+async function buscarProducto(idBuscado){
+    let producto = null;
+    try {
+        const data = await leerArchivoComoPromesa(path.join(__dirname, '..', 'data', 'productos.txt'));
+        let lineas = data.split('\n');
         lineas.shift(); // elimina la primera línea (cabecera)
-        let foundFlag = false
 
         lineas.forEach(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
-            if (id === req.body.id) {
-                let producto = new Producto(id, nombre, categoria, precio)
-                foundFlag = true
-                return res.status(200).send('Producto encontrado')
+            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim());
+            if (id === idBuscado) {
+                producto = new Producto(id, nombre, categoria, precio);
             }
-        })
-        if (!foundFlag) {
-            console.log('Producto no encontrado');
-            return res.status(404).send('Producto no encontrado')
-        }
-    })
+        });
+    } catch (err) {
+        console.error("Error al leer el archivo: ", err);
+    }    
+    return producto;
 }
 
 function mostrarProducto(req, res){

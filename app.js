@@ -37,8 +37,19 @@ app.get('/registrar-productos', (req, res) => {
 
 
 //Respuesta del servidor ante solicitud de ir a pagina buscar producto
-app.get('/buscar-producto', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-producto.html'));
+app.get('/buscar-producto', async (req, res) => {
+    const id = req.query.id;
+    if (id) {    
+        try {            
+            let producto = await productoController.buscarProducto(id); //falta vlidar que no encuentre el producto
+            res.json(producto);
+        } catch (error) {
+            console.error("Error al buscar producto:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    } else {
+        res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-producto.html'));
+    }
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar usuario
@@ -48,10 +59,10 @@ app.get('/registrar-usuario', (req, res) => {
 
 //Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
 app.get('/buscar-usuario', async (req, res) => {
-    const cedula = req.query.cedula; // Obtiene el parámetro de consulta 'cedula'
+    const cedula = req.query.cedula;
     if (cedula) {    
         try {
-            let usuario = await usuarioController.buscarUsuario(cedula); // Usar await aquí
+            let usuario = await usuarioController.buscarUsuario(cedula);
             res.json(usuario);
         } catch (error) {
             console.error("Error al buscar usuario:", error);
@@ -78,7 +89,6 @@ app.get('/carrito', (req, res) => {
 app.post('/registrar-producto', upload.single("imagen"),productoController.resgistrarProducto);
 
 //para buscar productos en la pagina buscar productos (entregable producto, se buscan por su id)
-app.post('/buscar-producto', productoController.buscarProducto);
 app.get('/productos', productoController.mostrarProducto)
 
 //para buscar productos y registrarlos en el catalogo si existen (entregable catalogo, se buscan por su id)
