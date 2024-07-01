@@ -47,12 +47,16 @@ app.get('/registrar-usuario', (req, res) => {
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
-app.get('/buscar-usuario', (req, res) => {
+app.get('/buscar-usuario', async (req, res) => {
     const cedula = req.query.cedula; // Obtiene el parámetro de consulta 'cedula'
     if (cedula) {    
-        const usuario = usuarioController.buscarUsuario(cedula) // da problema
-        console.log(`Estos son los datos del usuario: ${usuario}`)
-        res.json(usuario);
+        try {
+            let usuario = await usuarioController.buscarUsuario(cedula); // Usar await aquí
+            res.json(usuario);
+        } catch (error) {
+            console.error("Error al buscar usuario:", error);
+            res.status(500).send("Error interno del servidor");
+        }
     } else {
         res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
     }
