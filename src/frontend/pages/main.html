@@ -154,7 +154,7 @@
               const productId = match ? match[0] : null;
                 try{
                     fetch('main/delete', {
-                        method: 'PURGE',
+                        method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
                         },

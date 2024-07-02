@@ -161,7 +161,7 @@
             var idProducto= $("#id").val();
 
             $.ajax({
-                type: "PURGE",
+                type: "DELETE",
                 url: `http://localhost:3000/buscar-producto/delete?id=${idProducto}`,
                 contentType: "application/json"                            
             }).done(function() {

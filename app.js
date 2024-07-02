@@ -30,7 +30,7 @@ app.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
-app.purge('/main/delete', async (req,res) => {
+app.delete('/main/delete', async (req,res) => {
     await catalogoController.eliminarProductoCatalogo(req.body.id);
 });
 
@@ -56,7 +56,7 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
-app.purge('/buscar-producto/delete', async (req,res) => {
+app.delete('/buscar-producto/delete', async (req,res) => {
     const id = req.query.id;    
     if (id) {
         try {
