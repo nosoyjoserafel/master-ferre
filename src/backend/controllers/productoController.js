@@ -2,12 +2,21 @@ const fs = require('fs');
 const path = require('path');
 const Producto = require('../services/Producto');
 
+function leerArchivoComoPromesa(rutaArchivo) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    });
+}
+
 function resgistrarProducto(req, res) {
     if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio) {
         return res.status(400).send('Todos los campos son requeridos');
     }
 
-    const producto = `${req.body.id}, ${req.body.nombre}, ${req.body.categoria}, ${req.body.precio}\n`;
+    const producto = `${JSON.stringify(req.body)}\n`
 
     fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
@@ -27,26 +36,19 @@ function resgistrarProducto(req, res) {
     });
 }
 
-function leerArchivoComoPromesa(rutaArchivo) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
-            if (err) reject(err);
-            else resolve(data);
-        });
-    });
-}
 
 async function buscarProducto(idBuscado){
     let producto = null;
     try {
         const data = await leerArchivoComoPromesa(path.join(__dirname, '..', 'data', 'productos.txt'));
         let lineas = data.split('\n');
-        lineas.shift(); // elimina la primera línea (cabecera)
 
         lineas.forEach(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim());
-            if (id === idBuscado) {
-                producto = new Producto(id, nombre, categoria, precio);
+            if (linea !== ""){
+                let p = JSON.parse(linea);
+                if (p.id === idBuscado) {
+                    producto = new Producto(p.id, p.nombre, p.categoria, p.precio);
+                }
             }
         });
     } catch (err) {
@@ -56,15 +58,16 @@ async function buscarProducto(idBuscado){
 }
 
 function mostrarProducto(req, res){
-    fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', async (err, data) => {
         if (err) throw err;
 
         let lineas = data.split('\n'); // divide el contenido por líneas
-        lineas.shift(); // elimina la primera línea (cabecera)
 
         let productos = lineas.map(linea => {
-            let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
-            return new Producto(id, nombre, categoria, precio)
+            if (linea === "")
+                return;
+            let p = JSON.parse(linea);
+            return new Producto(p.id, p.nombre, p.categoria, p.precio);
         })
 
         res.json(productos);
@@ -78,8 +81,10 @@ async function eliminarProducto(idBuscado) {
             if (err) throw err;
             let lineas = data.split('\n');
             let nuevaData = lineas.filter(linea => {
-                let [id] = linea.split(",").map(item => item.trim());
-                return id !== idBuscado;
+                if(linea !== ""){
+                    let p = JSON.parse(linea);
+                    return p.id !== idBuscado;
+                }
             }).join('\n');
             fs.writeFile(path.join(__dirname, '..', 'data', 'productos.txt'), nuevaData, (err) => {
                 if (err) throw err;

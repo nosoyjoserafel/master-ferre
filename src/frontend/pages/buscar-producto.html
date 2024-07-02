@@ -162,7 +162,7 @@
 
             $.ajax({
                 type: "DELETE",
-                url: `http://localhost:3000/buscar-producto/delete?id=${idProducto}`,
+                url: `http://localhost:3000/buscar-producto/?id=${idProducto}`,
                 contentType: "application/json"                            
             }).done(function() {
                 alert("Producto eliminado con exito");

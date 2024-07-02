@@ -56,7 +56,7 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
-app.delete('/buscar-producto/delete', async (req,res) => {
+app.delete('/buscar-producto/', async (req,res) => {
     const id = req.query.id;    
     if (id) {
         try {
