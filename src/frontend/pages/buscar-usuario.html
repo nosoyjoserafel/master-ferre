@@ -11,7 +11,8 @@
             <form id="buscar-usuario-form">
                 <label for="cedula">Cédula:</label><br>
                 <input type="number" id="cedula" name="cedula"><br>      
-                <input type="submit" value="Buscar">  
+                <input type="button" id="buscar" value="Buscar"><br>
+                <input type="button" id="eliminar" value="Eliminar"> 
                 <br>
                 <br>
                 <a href="/main" id="regresar-inicio">Regresar al inicio</a>
@@ -23,6 +24,7 @@
             <script>
                 function mostrarDatosUsuario(usuario) {
                     var contenedor = document.getElementById('usuario-info');
+                    
                     if (!contenedor) {
                         contenedor = document.createElement('div');
                         contenedor.id = 'usuario-info';                    
@@ -32,7 +34,6 @@
                         contenedor.innerHTML = '';
                     }
                     
-                    //pruebas
                     var nombreElemento = document.getElementById('usuario-nombre');
                     if (!nombreElemento) {
                         nombreElemento = document.createElement('p');
@@ -40,7 +41,7 @@
                         contenedor.appendChild(nombreElemento);
                     }
                     nombreElemento.textContent = `Nombre: ${usuario._nombre}`;
-
+                    
                     var apellidoElemento = document.getElementById('usuario-apellido');
                     if (!apellidoElemento) {
                         apellidoElemento = document.createElement('p');
@@ -48,9 +49,9 @@
                         contenedor.appendChild(apellidoElemento);
                     }
                     apellidoElemento.textContent = `Apellido: ${usuario._apellido}`;
-                }
+                }                
 
-                $("#buscar-usuario-form").submit(function(e) {
+                $("#buscar").click(function(e) {
                     e.preventDefault();
 
                     var cedula = $("#cedula").val();
@@ -60,7 +61,24 @@
                         url: `http://localhost:3000/buscar-usuario?cedula=${cedula}`,
                         contentType: "application/json"                            
                     }).done(function(usuario) {
-                        mostrarDatosUsuario(usuario);
+                        if(usuario!==null)
+                            mostrarDatosUsuario(usuario);
+                    }).fail(function(jqXHR, textStatus) {
+                        alert("Request failed: " + textStatus);
+                    });
+                });
+
+                $("#eliminar").click(function(e) {
+                    e.preventDefault();
+
+                    var cedula = $("#cedula").val();
+
+                    $.ajax({
+                        type: "DELETE",
+                        url: `http://localhost:3000/buscar-usuario?cedula=${cedula}`,
+                        contentType: "application/json"                            
+                    }).done(function() {
+                        alert("Usuario eliminado");
                     }).fail(function(jqXHR, textStatus) {
                         alert("Request failed: " + textStatus);
                     });

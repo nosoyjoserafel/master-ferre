@@ -93,6 +93,19 @@ app.get('/buscar-usuario', async (req, res) => {
     }
 });
 
+app.delete('/buscar-usuario', async (req, res) => {    
+    const cedula = req.query.cedula;
+    if (cedula) {    
+        try {
+            await usuarioController.buscarUsuario(cedula);
+            res.status(200).send("Usuario eliminado con exito");
+        } catch (error) {
+            console.error("Error al buscar usuario:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
 app.get('/registrar-producto-catalogo', (req, res) => {

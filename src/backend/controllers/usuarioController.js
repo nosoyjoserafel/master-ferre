@@ -63,6 +63,24 @@ async function buscarUsuario(cedulaBuscada) {
     return usuario;
 }
 
+async function buscarUsuario(cedulaBuscada) {
+    try {
+        fs.readFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), 'utf8', (err, data) => {
+            if (err) throw err;
+            let lineas = data.split('\n');            
+            let nuevaData = lineas.filter(linea => {
+                let [nombre, apellido, usuario, contraseña, cedula] = linea.split(",").map(item => item.trim());
+                return cedula !== cedulaBuscada;
+            }).join('\n');
+            fs.writeFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), nuevaData, (err) => {
+                if (err) throw err;
+            });
+        });
+    } catch (err) {
+        console.error("Error al modificar el archivo: ", err);
+    }
+}
+
 module.exports = {
     registrarUsuario,
     buscarUsuario
