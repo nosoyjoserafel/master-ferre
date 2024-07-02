@@ -61,7 +61,7 @@
         </div>
         <div class="col-md-6 align-self-end text-end">
         <button class="btn btn-primary" type="button">Modificar producto</button>
-        <button class="btn btn-primary" type="button">Eliminar producto</button>
+        <button class="btn btn-primary" type="button" id="eliminarProducto">Eliminar producto</button>
         </div>
       </div>
     </div>
@@ -104,6 +104,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
 
+        function eliminarProductoEnTabla(id){
+            let trs = document.querySelectorAll('tbody tr');
+            let elementoAEliminar = null;
+            for (let tr of trs) {
+                let tdIdProducto = tr.querySelector('td:first-child');
+                if (tdIdProducto.textContent === id) {
+                    elementoAEliminar = tr;
+                    break;
+                }
+            }
+            elementoAEliminar.remove();
+        }
+
         function mostrarProductoEnTabla(producto){
             let tbody = document.querySelector('tbody');
             let tr = document.createElement('tr');
@@ -141,6 +154,22 @@
             }).fail(function(jqXHR, textStatus) {
                 alert("Request failed: " + textStatus);
             });;
+        });
+        $("#eliminarProducto").click(function(e) {
+            e.preventDefault();
+
+            var idProducto= $("#id").val();
+
+            $.ajax({
+                type: "PURGE",
+                url: `http://localhost:3000/buscar-producto/delete?id=${idProducto}`,
+                contentType: "application/json"                            
+            }).done(function() {
+                alert("Producto eliminado con exito");
+                eliminarProductoEnTabla(idProducto);
+            }).fail(function(jqXHR, textStatus) {
+                alert("No se encontró el producto a elininar");
+            });
         });
     </script>
 </body>

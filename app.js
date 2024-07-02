@@ -52,6 +52,24 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
+app.purge('/buscar-producto/delete', async (req,res) => {
+    const id = req.query.id;    
+    if (id) {
+        try {
+            let found = await productoController.eliminarProducto(id);
+            if(found){
+                res.status(200).send("Producto eliminado con exito");
+            }
+            else{
+                res.status(404).send("Producto no encontrado");
+            }
+        } catch (error) {
+            console.error("Error al eliminar usuario:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
 //Respuesta del servidor ante solicitud de ir a pagina de registrar usuario
 app.get('/registrar-usuario', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-usuario.html'));
@@ -72,6 +90,7 @@ app.get('/buscar-usuario', async (req, res) => {
         res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
     }
 });
+
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
 app.get('/registrar-producto-catalogo', (req, res) => {

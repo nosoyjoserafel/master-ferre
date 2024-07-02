@@ -71,8 +71,30 @@ function mostrarProducto(req, res){
     })
 }
 
+async function eliminarProducto(idBuscado) {
+    let producto = await buscarProducto(idBuscado);
+    if (producto !== null) {	
+        fs.readFile(path.join(__dirname, '..', 'data', 'productos.txt'), 'utf8', (err, data) => {
+            if (err) throw err;
+            let lineas = data.split('\n');
+            let nuevaData = lineas.filter(linea => {
+                let [id] = linea.split(",").map(item => item.trim());
+                return id !== idBuscado;
+            }).join('\n');
+            fs.writeFile(path.join(__dirname, '..', 'data', 'productos.txt'), nuevaData, (err) => {
+                if (err) throw err;
+            });
+        });
+        return true
+    }
+    else {
+        return false
+    }
+}
+
 module.exports = {
     resgistrarProducto,
     buscarProducto,
-    mostrarProducto
+    mostrarProducto,
+    eliminarProducto
 };
