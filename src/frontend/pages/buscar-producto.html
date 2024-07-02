@@ -88,12 +88,6 @@
               <li class="page-item active" aria-current="page">
                 <a class="page-link" href="#">1</a>
               </li>
-              <!-- <li class="page-item">
-                <a class="page-link" href="#">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">3</a>
-              </li> -->
               <li class="page-item">
                 <a class="page-link" href="#">Next</a>
               </li>
@@ -102,51 +96,48 @@
         </div>
       </footer>
 
-
-
-
-
-
-
-
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>
+
+        function mostrarProductoEnTabla(producto){
+            let tbody = document.querySelector('tbody');
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${producto.id}</td>
+                <td>${producto.nombre}</td>
+                <td>${producto.categoria}</td>
+                <td>${producto.precio}</td>
+            `;
+            tbody.appendChild(tr);
+        }
+
         window.onload = function() {
             fetch('/productos')
                 .then(response => response.json())
                 .then(productos => {
-                    let tbody = document.querySelector('tbody');
                     productos.slice(0, productos.length - 1).forEach(producto => {
-                        let tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td>${producto.id}</td>
-                            <td>${producto.nombre}</td>
-                            <td>${producto.categoria}</td>
-                            <td>${producto.precio}</td>
-                        `;
-                        tbody.appendChild(tr);
+                        mostrarProductoEnTabla(producto);
                     });
                 });
         };
         $("#buscar-producto-form").submit(function(e) {
             e.preventDefault();
 
-            var producto = {
-                id: $("#id").val(),
-                nombre: $("#nombre").val(),
-                categoria: $("#categoria").val(),
-                precio: $("#precio").val()
-            };
+            var idProducto= $("#id").val();
 
             $.ajax({
-                type: "POST",
-                url: "http://localhost:3000/buscar-producto",
-                data: JSON.stringify(producto),
+                type: "GET",
+                url: `http://localhost:3000/buscar-producto?id=${idProducto}`,
                 contentType: "application/json"                            
-            });
+            }).done(function(producto) {
+                let tbody = document.querySelector('tbody');
+                tbody.innerHTML = '';                
+                mostrarProductoEnTabla(producto);
+            }).fail(function(jqXHR, textStatus) {
+                alert("Request failed: " + textStatus);
+            });;
         });
     </script>
 </body>

@@ -35,22 +35,32 @@ function registrarUsuario(req, res) {
     });
 }
 
-function buscarUsuario(cedulaBuscada){   
-    fs.readFile(path.join(__dirname, '..','data','usuarios.txt'), 'utf8', (err, data) => {
-        if (err) throw err;
+function leerArchivoComoPromesa(rutaArchivo) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    });
+}
 
-        let lineas = data.split('\n'); // divide el contenido por líneas
+async function buscarUsuario(cedulaBuscada) {
+    let usuario = null;
+    try {
+        const data = await leerArchivoComoPromesa(path.join(__dirname, '..', 'data', 'usuarios.txt'));
+        let lineas = data.split('\n');
         lineas.shift(); // elimina la primera línea (cabecera)
 
-        lineas.map(linea => {
-            let [nombre,apellido, nombreUsuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim())
-            if (cedula === cedulaBuscada) {  
-                console.log('Usuario encontrado')              
-                return new Cliente(nombre, apellido, nombreUsuario, contrasenia, cedula, telefono, direccion)                                                
+        lineas.forEach(linea => {
+            let [nombre, apellido, nombreUsuario, contrasenia, cedula, telefono, direccion] = linea.split(",").map(item => item.trim());
+            if (cedula === cedulaBuscada) {
+                usuario = new Cliente(nombre, apellido, nombreUsuario, contrasenia, cedula, telefono, direccion);                
             }
-        })
-    })
-    return null
+        });
+    } catch (err) {
+        console.error("Error al leer el archivo: ", err);
+    }    
+    return usuario;
 }
 
 module.exports = {
