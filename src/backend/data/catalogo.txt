@@ -1,3 +1,4 @@
 id, nombre, categoria, precio
-1234, martillo, herramienta, 5
 1233, Tenaza, Herramienta, 10
+1234, martillo, herramienta, 5
+555, pepe, pepe , 10

@@ -30,7 +30,7 @@ app.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
-app.delete('/main/delete', async (req,res) => {
+app.delete('/main', async (req,res) => {
     await catalogoController.eliminarProductoCatalogo(req.body.id);
 });
 
@@ -56,6 +56,18 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
+app.put('/buscar-producto/', async (req,res) => {
+    const id = req.query.id;    
+    if (id) {
+        try {
+            productoController.modificarProducto(req,res);
+        } catch (error) {
+            console.error("Error al modificar producto:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
 app.delete('/buscar-producto/', async (req,res) => {
     const id = req.query.id;    
     if (id) {
@@ -68,7 +80,7 @@ app.delete('/buscar-producto/', async (req,res) => {
                 res.status(404).send("Producto no encontrado");
             }
         } catch (error) {
-            console.error("Error al eliminar usuario:", error);
+            console.error("Error al eliminar producto:", error);
             res.status(500).send("Error interno del servidor");
         }
     }

@@ -36,7 +36,6 @@ function resgistrarProducto(req, res) {
     });
 }
 
-
 async function buscarProducto(idBuscado){
     let producto = null;
     try {
@@ -74,6 +73,45 @@ function mostrarProducto(req, res){
     })
 }
 
+function modificarProducto(req, res) {
+    const productoId = req.body.id;
+    const datosModificados = req.body;
+
+    fs.readFile(path.join(__dirname, '..', 'data', 'productos.txt'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error al leer el archivo de productos');
+        }
+
+        let productosModificados = false;
+        let lineas = data.split('\n');
+        let productos = lineas.map(linea => {
+            if (linea !== "") {
+                let p = JSON.parse(linea);            
+                if (p.id === productoId) {
+                    productosModificados = true;
+                    return new Producto(datosModificados.id, datosModificados.nombre, datosModificados.categoria, datosModificados.precio);
+                }
+                return new Producto(p.id, p.nombre, p.categoria, p.precio);
+            }
+        }).filter(Boolean);
+
+        if (!productosModificados) {
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        const nuevoContenido = productos.map(p => JSON.stringify(p)).join('\n')+'\n';
+
+        fs.writeFile(path.join(__dirname, '..', 'data', 'productos.txt'), nuevoContenido, 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Error al escribir en el archivo de productos');
+            }
+            res.send('Producto modificado con éxito');
+        });
+    });
+}
+
 async function eliminarProducto(idBuscado) {
     let producto = await buscarProducto(idBuscado);
     if (producto !== null) {	
@@ -101,5 +139,6 @@ module.exports = {
     resgistrarProducto,
     buscarProducto,
     mostrarProducto,
+    modificarProducto,
     eliminarProducto
 };
