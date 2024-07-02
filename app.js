@@ -30,6 +30,10 @@ app.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
+app.put('/main', (req, res) => {
+    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
+});
+
 app.delete('/main', async (req,res) => {
     await catalogoController.eliminarProductoCatalogo(req.body.id);
 });

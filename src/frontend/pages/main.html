@@ -84,6 +84,9 @@
       crossorigin="anonymous"
     ></script>
     <script>
+
+
+
       fetch("/catalogo")
         .then((response) => response.json())
         .then((productos) => {
@@ -104,11 +107,14 @@
                 <div class="card">
                   <img src="../assets/imgs/default-product-image.png" class="card-img-top" alt="Product Image">
                   <div class="card-body">
-                    <h5 class="card-title">${producto.nombre}</h5>
-                    <p class="card-text">${producto.categoria}</p>
+                    <h5 class="card-title product-name">${producto.nombre}</h5>
+                    <p class="card-text product-category">${producto.categoria}</p>
                     <p class="card-text product-id">ID: ${producto.id}</p>
-                    <p class="card-text">Price: $${producto.precio}</p>
+                    <p class="card-text product-price">Price: $${producto.precio}</p>
                     <button class="btn btn-primary add-to-cart-btn"><i class="fas fa-plus"></i> Agregar a carrito</button>
+                    <br>
+                    <br>
+                    <button class="btn btn-primary modify-product-btn">Modificar producto</button>
                     <br>
                     <br>
                     <button class="btn btn-primary delete-from-catalog-btn">Eliminar de catalogo</button>
@@ -145,6 +151,87 @@
               } catch (error) {
                 console.error("Error al agregar el producto al carrito", error);
               }
+            });
+
+            const modifyBtn = document.getElementById('modify-product-btn');
+            modifyBtn.addEventListener('click', function(event) {
+              const productDiv = event.target.closest('div');
+              const productName = productDiv.querySelector('.product-name').textContent;
+              const productCategory = productDiv.querySelector('.product-category').textContent;
+              const productId = productDiv.querySelector('.product-id').textContent.replace('ID: ', '');
+              const productPrice = productDiv.querySelector('.product-price').textContent.replace('Price: $', '');
+              const productData = {                  
+                  id: productId,
+                  nombre: productName,
+                  categoria: productCategory,
+                  precio: productPrice
+              }; 
+              //sin terminar//
+
+                // Crear el contenedor superpuesto
+                const overlay = document.createElement('div');
+                overlay.style.position = 'fixed';
+                overlay.style.left = '0';
+                overlay.style.top = '0';
+                overlay.style.width = '100%';
+                overlay.style.height = '100%';
+                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                overlay.style.zIndex = '1000';
+                overlay.style.display = 'flex';
+                overlay.style.justifyContent = 'center';
+                overlay.style.alignItems = 'center';
+
+                // Crear el formulario dentro del contenedor
+                const form = document.createElement('form');
+                form.innerHTML = `
+                    <div style="background: white; padding: 20px; border-radius: 5px;">
+                        <label>Nombre: <input type="text" name="nombre" value="${productData.nombre}"></label><br>
+                        <label>Categoría: <input type="text" name="categoria" value="${productData.categoria}"></label><br>
+                        <label>Precio: <input type="number" name="precio" value="${productData.precio}"></label><br>
+                        <button type="button" id="saveChanges">Guardar</button>
+                        <button type="button" id="closeOverlay">X</button>
+                    </div>
+                `;
+                overlay.appendChild(form);
+
+                // Función para cerrar el overlay
+                const closeOverlay = () => document.body.removeChild(overlay);
+
+                // Evento para cerrar el overlay
+                document.getElementById('closeOverlay').addEventListener('click', closeOverlay);
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) closeOverlay();
+                });
+
+                // Evento para guardar los cambios
+                document.getElementById('saveChanges').addEventListener('click', function() {
+                    const updatedProduct = {
+                        id: productData.id,
+                        nombre: form.querySelector('[name="nombre"]').value,
+                        categoria: form.querySelector('[name="categoria"]').value,
+                        precio: form.querySelector('[name="precio"]').value
+                    };
+
+                    // Enviar los datos actualizados al servidor
+                    fetch('/api/product/update', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedProduct),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        closeOverlay();
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                });
+
+                // Añadir el overlay al body
+                document.body.appendChild(overlay);
             });
 
             const deleteFromCatalogBtn = card.querySelector(".delete-from-catalog-btn");
