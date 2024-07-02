@@ -73,10 +73,36 @@ function modificarProductoCatalogo(req, res){
         console.log('Producto no encontrado');
         return res.status(404).send('Producto no encontrado') //prueba de estado de respuesta
     }
+}
 
+function leerArchivoComoPromesa(rutaArchivo) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    });
+}
+
+async function eliminarProductoCatalogo(idProducto) {    
+    try {
+        const filePath = path.join(__dirname, '..', 'data', 'catalogo.txt');
+        const data = await leerArchivoComoPromesa(filePath);
+        const lineas = data.split('\n');        
+        let nuevaData = lineas.filter(linea => {
+            let [id] = linea.split(",").map(item => item.trim());
+            return id !== idProducto;
+        }).join('\n');
+        fs.writeFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), nuevaData, (err) => {
+            if (err) throw err;
+        });
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 module.exports = {
     resgistrarProductoCatalogo,
-    mostrarProductoCatalogo
+    mostrarProductoCatalogo,
+    eliminarProductoCatalogo
 };

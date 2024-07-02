@@ -30,6 +30,10 @@ app.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
+app.purge('/main/delete', async (req,res) => {
+    await catalogoController.eliminarProductoCatalogo(req.body.id);
+});
+
 //Respuesta del servidor ante solicitud de ir a pagina registrar producto
 app.get('/registrar-productos', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto.html'));
@@ -70,13 +74,11 @@ app.purge('/buscar-producto/delete', async (req,res) => {
     }
 });
 
-//Respuesta del servidor ante solicitud de ir a pagina de registrar usuario
 app.get('/registrar-usuario', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-usuario.html'));
 });
 
-//Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
-app.get('/buscar-usuario', async (req, res) => {
+app.get('/buscar-usuario', async (req, res) => {    
     const cedula = req.query.cedula;
     if (cedula) {    
         try {

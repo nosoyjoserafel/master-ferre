@@ -64,12 +64,6 @@
             <li class="page-item active" aria-current="page">
               <a class="page-link" href="#">1</a>
             </li>
-            <!-- <li class="page-item">
-                <a class="page-link" href="#">2</a>
-              </li>
-              <li class="page-item">
-                <a class="page-link" href="#">3</a>
-              </li> -->
             <li class="page-item">
               <a class="page-link" href="#">Next</a>
             </li>
@@ -104,29 +98,29 @@
               row = document.createElement("div");
               row.className = "row mt-3";
             }
-            console.log(producto);
             const card = document.createElement("div");
             card.className = "col-md-4";
             card.innerHTML = `
-        <div class="card">
-          <img src="../assets/imgs/default-product-image.png" class="card-img-top" alt="Product Image">
-          <div class="card-body">
-            <h5 class="card-title">${producto.nombre}</h5>
-            <p class="card-text">${producto.categoria}</p>
-            <p class="card-text">Price: $${producto.precio}</p>
-            <button class="btn btn-primary add-to-cart-btn"><i class="fas fa-plus"></i> Add to Cart</button>
-          </div>
-        </div>
-      `;
+                <div class="card">
+                  <img src="../assets/imgs/default-product-image.png" class="card-img-top" alt="Product Image">
+                  <div class="card-body">
+                    <h5 class="card-title">${producto.nombre}</h5>
+                    <p class="card-text">${producto.categoria}</p>
+                    <p class="card-text product-id">ID: ${producto.id}</p>
+                    <p class="card-text">Price: $${producto.precio}</p>
+                    <button class="btn btn-primary add-to-cart-btn"><i class="fas fa-plus"></i> Agregar a carrito</button>
+                    <br>
+                    <br>
+                    <button class="btn btn-primary delete-from-catalog-btn">Eliminar de catalogo</button>
+                  </div>
+                </div>
+              `;
             row.appendChild(card);
-            count++;
-
-            // **Add event listener to "Add to Cart" button:**
+            count++;            
             const addToCartBtn = card.querySelector(".add-to-cart-btn");
             addToCartBtn.addEventListener("click", async () => {
-              const usuarioId = "matias_404"; // Replace with mechanism to get actual user ID
-              const cantidad = 1; // Fixed quantity to 1
-
+              const usuarioId = "matias_404"; //pruebas
+              const cantidad = 1; 
               try {
                 const response = await fetch("/AddToCart", {
                   method: "POST",
@@ -141,22 +135,40 @@
                 });
 
                 if (response.ok) {
-                  console.log("Producto agregado al carrito");
-                  // Optionally display a success message to the user
+                  alert("Producto agregado al carrito");
                 } else {
-                  console.error(
-                    "Error adding product to cart:",
+                  alert(
+                    "Error al agregar el producto al carrito:",
                     response.status
                   );
-                  // Handle error (e.g., display an error message to the user)
                 }
               } catch (error) {
-                console.error("Error adding product to cart:", error);
-                // Handle error (e.g., display an error message to the user)
+                console.error("Error al agregar el producto al carrito", error);
               }
             });
-          });
 
+            const deleteFromCatalogBtn = card.querySelector(".delete-from-catalog-btn");
+            deleteFromCatalogBtn.addEventListener("click",() => {
+              const productIdText = card.querySelector('.product-id').textContent;
+              const match = productIdText.match(/\d+/);
+              const productId = match ? match[0] : null;
+                try{
+                    fetch('main/delete', {
+                        method: 'PURGE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: productId,
+                        }),
+                    });
+                    alert('Producto eliminado del catálogo');
+                    card.remove();
+                } catch (error) {
+                    console.error('Error al eliminar el producto del catálogo', error);
+                }
+            });
+          });
           container.appendChild(row);
         })
         .catch((error) => console.error("Error:", error));
