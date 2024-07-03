@@ -31,7 +31,12 @@ app.get('/main', (req, res) => {
 });
 
 app.put('/main', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
+    try{
+        catalogoController.modificarProductoCatalogo(req,res);
+    }catch(error){
+        console.error("Error al modificar producto:", error);
+        res.status(500).send("Error interno del servidor");
+    }
 });
 
 app.delete('/main', async (req,res) => {

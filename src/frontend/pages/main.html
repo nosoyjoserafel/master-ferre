@@ -14,6 +14,27 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
+    <style>
+      /* Dentro de tu archivo CSS */
+#overlay {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+    </style>    
   </head>
   <body>
     <nav class="container navbar navbar-expand-lg navbar-light">
@@ -51,6 +72,17 @@
     </nav>
 
     <div id="catalogo" class="container mt-3"></div>
+    <div id="overlay">
+      <form>
+          <div class="form-container">
+              <label>Nombre: <input type="text" name="nombre" id="nombre"></label><br>
+              <label>Categoría: <input type="text" name="categoria" id="categoria"></label><br>
+              <label>Precio: <input type="number" name="precio" id="precio"></label><br>
+              <button type="button" id="saveChanges">Guardar</button>
+              <button type="button" id="closeOverlay">X</button>
+          </div>
+      </form>
+    </div>
 
     <footer class="footer mt-3">
       <div class="container">
@@ -85,7 +117,27 @@
     ></script>
     <script>
 
+        window.onload = function() {
+          document.getElementById("overlay").style.display = "none";
+        };
 
+        function mostrarDatosAModificar(producto) {
+            document.getElementById("overlay").style.display = "block";
+            document.querySelector("#overlay #nombre").value = producto.nombre;
+            document.querySelector("#overlay #categoria").value = producto.categoria;
+            document.querySelector("#overlay #precio").value = producto.precio;
+        }
+
+        window.onclick = function(event) {
+            var modal = document.getElementById("overlay");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        };
+
+        document.querySelector("#closeOverlay").addEventListener("click", function() {
+            document.getElementById("overlay").style.display = "none";
+        });
 
       fetch("/catalogo")
         .then((response) => response.json())
@@ -153,85 +205,48 @@
               }
             });
 
-            const modifyBtn = document.getElementById('modify-product-btn');
+            const modifyBtn = card.querySelector('.modify-product-btn');
             modifyBtn.addEventListener('click', function(event) {
               const productDiv = event.target.closest('div');
               const productName = productDiv.querySelector('.product-name').textContent;
               const productCategory = productDiv.querySelector('.product-category').textContent;
               const productId = productDiv.querySelector('.product-id').textContent.replace('ID: ', '');
               const productPrice = productDiv.querySelector('.product-price').textContent.replace('Price: $', '');
-              const productData = {                  
+              const product = {
                   id: productId,
                   nombre: productName,
                   categoria: productCategory,
                   precio: productPrice
-              }; 
-              //sin terminar//
+              };
+              
+              mostrarDatosAModificar(product);                                                                   
 
-                // Crear el contenedor superpuesto
-                const overlay = document.createElement('div');
-                overlay.style.position = 'fixed';
-                overlay.style.left = '0';
-                overlay.style.top = '0';
-                overlay.style.width = '100%';
-                overlay.style.height = '100%';
-                overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-                overlay.style.zIndex = '1000';
-                overlay.style.display = 'flex';
-                overlay.style.justifyContent = 'center';
-                overlay.style.alignItems = 'center';
+              // Evento para guardar los cambios
+              document.getElementById('saveChanges').addEventListener('click', function() {
+                  const updatedProduct = {
+                      id: product.id,
+                      nombre: document.querySelector('#overlay #nombre').value,
+                      categoria: document.querySelector('#overlay #categoria').value,
+                      precio: document.querySelector('#overlay #precio').value
+                  };
 
-                // Crear el formulario dentro del contenedor
-                const form = document.createElement('form');
-                form.innerHTML = `
-                    <div style="background: white; padding: 20px; border-radius: 5px;">
-                        <label>Nombre: <input type="text" name="nombre" value="${productData.nombre}"></label><br>
-                        <label>Categoría: <input type="text" name="categoria" value="${productData.categoria}"></label><br>
-                        <label>Precio: <input type="number" name="precio" value="${productData.precio}"></label><br>
-                        <button type="button" id="saveChanges">Guardar</button>
-                        <button type="button" id="closeOverlay">X</button>
-                    </div>
-                `;
-                overlay.appendChild(form);
-
-                // Función para cerrar el overlay
-                const closeOverlay = () => document.body.removeChild(overlay);
-
-                // Evento para cerrar el overlay
-                document.getElementById('closeOverlay').addEventListener('click', closeOverlay);
-                overlay.addEventListener('click', function(e) {
-                    if (e.target === overlay) closeOverlay();
-                });
-
-                // Evento para guardar los cambios
-                document.getElementById('saveChanges').addEventListener('click', function() {
-                    const updatedProduct = {
-                        id: productData.id,
-                        nombre: form.querySelector('[name="nombre"]').value,
-                        categoria: form.querySelector('[name="categoria"]').value,
-                        precio: form.querySelector('[name="precio"]').value
-                    };
-
-                    // Enviar los datos actualizados al servidor
-                    fetch('/api/product/update', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(updatedProduct),
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        closeOverlay();
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-                });
-
-                // Añadir el overlay al body
-                document.body.appendChild(overlay);
+                  // Enviar los datos actualizados al servidor
+                  fetch('/main', {
+                      method: 'PUT',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(updatedProduct)
+                  })
+                  .then(response => response.json())
+                  .then(data => {
+                      alert('Producto en catálogo actualizado');
+                      window.location.reload();
+                  })
+                  .catch((error) => {
+                      console.error('Error:', error);
+                  });
+              });
             });
 
             const deleteFromCatalogBtn = card.querySelector(".delete-from-catalog-btn");

@@ -1,4 +1,2 @@
-id, nombre, categoria, precio
-1233, Tenaza, Herramienta, 10
-1234, martillo, herramienta, 5
-555, pepe, pepe , 10
+{"id":"555","nombre":"martillo","categoria":"herramineta","precio":"9"}
+{"id":"444","nombre":"pepa","categoria":"pepe","precio":"4"}
