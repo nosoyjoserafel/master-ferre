@@ -15,7 +15,6 @@
       rel="stylesheet"
     />
     <style>
-      /* Dentro de tu archivo CSS */
 #overlay {
     position: fixed;
     left: 0;
@@ -75,9 +74,11 @@
     <div id="overlay">
       <form>
           <div class="form-container">
-              <label>Nombre: <input type="text" name="nombre" id="nombre"></label><br>
-              <label>Categoría: <input type="text" name="categoria" id="categoria"></label><br>
-              <label>Precio: <input type="number" name="precio" id="precio"></label><br>
+              <h2>Modificar producto</h2>
+              <label for="id">ID: <input type="text" name="id" id="id" readonly></label><br>
+              <label for="nombreModificado">Nombre: <input type="text" name="nombre" id="nombreModificado"></label><br>
+              <label for="categoriaModificada">Categoría: <input type="text" name="categoria" id="categoriaModificada"></label><br>
+              <label for="precioModificado">Precio: <input type="number" name="precio" id="precioModificado"></label><br>
               <button type="button" id="saveChanges">Guardar</button>
               <button type="button" id="closeOverlay">X</button>
           </div>
@@ -123,10 +124,40 @@
 
         function mostrarDatosAModificar(producto) {
             document.getElementById("overlay").style.display = "block";
-            document.querySelector("#overlay #nombre").value = producto.nombre;
-            document.querySelector("#overlay #categoria").value = producto.categoria;
-            document.querySelector("#overlay #precio").value = producto.precio;
+            document.querySelector("#overlay #id").value = producto.id;
+            document.querySelector("#overlay #nombreModificado").value = producto.nombre;
+            document.querySelector("#overlay #categoriaModificada").value = producto.categoria;
+            document.querySelector("#overlay #precioModificado").value = producto.precio;
         }
+
+        // Evento para guardar los cambios al modificar un producto en catálogo
+        document.getElementById('saveChanges').addEventListener('click', function() {
+            const updatedProduct = {
+                id: document.querySelector('#overlay #id').value,
+                nombre: document.querySelector('#overlay #nombreModificado').value,
+                categoria: document.querySelector('#overlay #categoriaModificada').value,
+                precio: document.querySelector('#overlay #precioModificado').value
+            };
+
+            // Enviar los datos actualizados al servidor
+            fetch(`/main`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updatedProduct),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al actualizar el producto en el catálogo');
+                }                 
+                alert('Producto en catálogo actualizado');
+                window.location.reload();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
 
         window.onclick = function(event) {
             var modal = document.getElementById("overlay");
@@ -206,47 +237,18 @@
             });
 
             const modifyBtn = card.querySelector('.modify-product-btn');
-            modifyBtn.addEventListener('click', function(event) {
-              const productDiv = event.target.closest('div');
-              const productName = productDiv.querySelector('.product-name').textContent;
-              const productCategory = productDiv.querySelector('.product-category').textContent;
-              const productId = productDiv.querySelector('.product-id').textContent.replace('ID: ', '');
-              const productPrice = productDiv.querySelector('.product-price').textContent.replace('Price: $', '');
+            modifyBtn.addEventListener('click', () => {
+              const productName = card.querySelector('.product-name').textContent;
+              const productCategory = card.querySelector('.product-category').textContent;
+              const productId = card.querySelector('.product-id').textContent.replace('ID: ', '');
+              const productPrice = card.querySelector('.product-price').textContent.replace('Price: $', '');
               const product = {
                   id: productId,
                   nombre: productName,
                   categoria: productCategory,
                   precio: productPrice
-              };
-              
-              mostrarDatosAModificar(product);                                                                   
-
-              // Evento para guardar los cambios
-              document.getElementById('saveChanges').addEventListener('click', function() {
-                  const updatedProduct = {
-                      id: product.id,
-                      nombre: document.querySelector('#overlay #nombre').value,
-                      categoria: document.querySelector('#overlay #categoria').value,
-                      precio: document.querySelector('#overlay #precio').value
-                  };
-
-                  // Enviar los datos actualizados al servidor
-                  fetch('/main', {
-                      method: 'PUT',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify(updatedProduct)
-                  })
-                  .then(response => response.json())
-                  .then(data => {
-                      alert('Producto en catálogo actualizado');
-                      window.location.reload();
-                  })
-                  .catch((error) => {
-                      console.error('Error:', error);
-                  });
-              });
+              };              
+              mostrarDatosAModificar(product);                                                                                 
             });
 
             const deleteFromCatalogBtn = card.querySelector(".delete-from-catalog-btn");

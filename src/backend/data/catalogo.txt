@@ -1,2 +1,2 @@
-{"id":"555","nombre":"martillo","categoria":"herramineta","precio":"9"}
-{"id":"444","nombre":"pepa","categoria":"pepe","precio":"4"}
+{"id":"555","nombre":"martillo","categoria":"herramienta","precio":"8"}
+{"id":"444","nombre":"pepa","categoria":"pepe","precio":"8"}

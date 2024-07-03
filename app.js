@@ -32,7 +32,7 @@ app.get('/main', (req, res) => {
 
 app.put('/main', (req, res) => {
     try{
-        catalogoController.modificarProductoCatalogo(req,res);
+        catalogoController.modificarProductoCatalogo(req, res);
     }catch(error){
         console.error("Error al modificar producto:", error);
         res.status(500).send("Error interno del servidor");
@@ -114,11 +114,20 @@ app.get('/buscar-usuario', async (req, res) => {
     }
 });
 
+app.put('/buscar-usuario', async (req, res) => {    
+    try {
+        await usuarioController.modificarUsuario(req,res);
+    } catch (error) {
+        console.error("Error al buscar usuario:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
 app.delete('/buscar-usuario', async (req, res) => {    
     const cedula = req.query.cedula;
     if (cedula) {    
         try {
-            await usuarioController.buscarUsuario(cedula);
+            await usuarioController.eliminarUsuario(cedula);
             res.status(200).send("Usuario eliminado con exito");
         } catch (error) {
             console.error("Error al buscar usuario:", error);

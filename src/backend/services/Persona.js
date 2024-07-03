@@ -1,77 +1,76 @@
 module.exports = class Persona {
     constructor(nombre, apellido, usuario, contrasenia, cedula, direccion, telefono, condicion) {
-        this._nombre = nombre
-        this._apellido = apellido
-        this._usuario = usuario
-        this._contrasenia = contrasenia
-        this._cedula = cedula
-        this._direccion = direccion
-        this._telefono = telefono
-        this._condicion = condicion      
+        this.nombre = nombre
+        this.apellido = apellido
+        this.usuario = usuario
+        this.contrasenia = contrasenia
+        this.cedula = cedula
+        this.direccion = direccion
+        this.telefono = telefono
+        this.condicion = condicion      
     }
 
-    get nombre() {
-        return this._nombre;
+    getnombre() {
+        return this.nombre;
     }
 
-    set nombre(value) {
-        this._nombre = value;
+    setnombre(value) {
+        this.nombre = value;
     }
 
-    get apellido() {
-        return this._apellido;
+    getapellido() {
+        return this.apellido;
     }
 
-    set apellido(value) {
-        this._apellido = value;
+    setapellido(value) {
+        this.apellido = value;
     }
 
-    get usuario() {
-        return this._usuario;
+    getusuario() {
+        return this.usuario;
     }
 
-    set usuario(value) {
-        this._usuario = value;
+    setusuario(value) {
+        this.usuario = value;
     }
 
-    get contrasenia() {
-        return this._contrasenia;
+    getcontrasenia() {
+        return this.contrasenia;
     }
 
-    set contrasenia(value) {
-        this._contrasenia = value;
+    setcontrasenia(value) {
+        this.contrasenia = value;
     }
 
-    get cedula() {
-        return this._cedula;
+    getcedula() {
+        return this.cedula;
     }
 
-    set cedula(value) {
-        this._cedula = value;
+    setcedula(value) {
+        this.cedula = value;
     }
 
-    get direccion() {
-        return this._direccion;
+    getdireccion() {
+        return this.direccion;
     }
 
-    set direccion(value) {
-        this._direccion = value;
+    setdireccion(value) {
+        this.direccion = value;
     }
 
-    get telefono() {
-        return this._telefono;
+    gettelefono() {
+        return this.telefono;
     }
 
-    set telefono(value) {
-        this._telefono = value;
+    setelefono(value) {
+        this.telefono = value;
     }
 
-    get condicion() {
-        return this._condicion;
+    getcondicion() {
+        return this.condicion;
     }
 
-    set condicion(value) {
-        this._condicion = value;
+    setcondicion(value) {
+        this.condicion = value;
     }
-
 }
