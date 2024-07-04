@@ -31,15 +31,15 @@ app.get('/main', (req, res) => {
 });
 
 app.put('/main', (req, res) => {
-    try{
+    try {
         catalogoController.modificarProductoCatalogo(req, res);
-    }catch(error){
+    } catch (error) {
         console.error("Error al modificar producto:", error);
         res.status(500).send("Error interno del servidor");
     }
 });
 
-app.delete('/main', async (req,res) => {
+app.delete('/main', async (req, res) => {
     await catalogoController.eliminarProductoCatalogo(req.body.id);
 });
 
@@ -52,8 +52,8 @@ app.get('/registrar-productos', (req, res) => {
 //Respuesta del servidor ante solicitud de ir a pagina buscar producto
 app.get('/buscar-producto', async (req, res) => {
     const id = req.query.id;
-    if (id) {    
-        try {            
+    if (id) {
+        try {
             let producto = await productoController.buscarProducto(id); //falta vlidar que no encuentre el producto
             res.json(producto);
         } catch (error) {
@@ -65,11 +65,11 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
-app.put('/buscar-producto/', async (req,res) => {
-    const id = req.query.id;    
+app.put('/buscar-producto/', async (req, res) => {
+    const id = req.query.id;
     if (id) {
         try {
-            productoController.modificarProducto(req,res);
+            productoController.modificarProducto(req, res);
         } catch (error) {
             console.error("Error al modificar producto:", error);
             res.status(500).send("Error interno del servidor");
@@ -77,15 +77,15 @@ app.put('/buscar-producto/', async (req,res) => {
     }
 });
 
-app.delete('/buscar-producto/', async (req,res) => {
-    const id = req.query.id;    
+app.delete('/buscar-producto/', async (req, res) => {
+    const id = req.query.id;
     if (id) {
         try {
             let found = await productoController.eliminarProducto(id);
-            if(found){
+            if (found) {
                 res.status(200).send("Producto eliminado con exito");
             }
-            else{
+            else {
                 res.status(404).send("Producto no encontrado");
             }
         } catch (error) {
@@ -99,9 +99,9 @@ app.get('/registrar-usuario', (req, res) => {
     res.sendFile(path.join(__dirname + '/view/registrar-usuario.html'));
 });
 
-app.get('/buscar-usuario', async (req, res) => {    
+app.get('/buscar-usuario', async (req, res) => {
     const cedula = req.query.cedula;
-    if (cedula) {    
+    if (cedula) {
         try {
             let usuario = await usuarioController.buscarUsuario(cedula);
             res.json(usuario);
@@ -114,18 +114,18 @@ app.get('/buscar-usuario', async (req, res) => {
     }
 });
 
-app.put('/buscar-usuario', async (req, res) => {    
+app.put('/buscar-usuario', async (req, res) => {
     try {
-        await usuarioController.modificarUsuario(req,res);
+        await usuarioController.modificarUsuario(req, res);
     } catch (error) {
         console.error("Error al buscar usuario:", error);
         res.status(500).send("Error interno del servidor");
     }
 });
 
-app.delete('/buscar-usuario', async (req, res) => {    
+app.delete('/buscar-usuario', async (req, res) => {
     const cedula = req.query.cedula;
-    if (cedula) {    
+    if (cedula) {
         try {
             await usuarioController.eliminarUsuario(cedula);
             res.status(200).send("Usuario eliminado con exito");
@@ -150,14 +150,14 @@ app.get('/carrito', (req, res) => {
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas
 
 //para registrar productos en la pagina registrar productos (entregable producto)
-app.post('/registrar-producto', upload.single("imagen"),productoController.resgistrarProducto);
+app.post('/registrar-producto', upload.single("imagen"), productoController.resgistrarProducto);
 
 //para buscar productos en la pagina buscar productos (entregable producto, se buscan por su id)
 app.get('/productos', productoController.mostrarProducto)
 
 //para buscar productos y registrarlos en el catalogo si existen (entregable catalogo, se buscan por su id)
-app.post('/registrar-producto-catalogo', (req,res) =>{
-    catalogoController.resgistrarProductoCatalogo(req,res)
+app.post('/registrar-producto-catalogo', (req, res) => {
+    catalogoController.resgistrarProductoCatalogo(req, res)
 });
 
 //para mostrar productos en catalogo (entregable catalogo)
@@ -177,6 +177,23 @@ app.put('/modifyCart', carritoController.modificarCarrito)
 
 //Eliminar producto del carrito
 app.delete('/deleteFromCart', carritoController.eliminarProductoCarrito)
+
+//Solicitar compra
+// necesito un usuarioSolicitud en el body
+app.put('/solicitarCompra', carritoController.solicitarCompra)
+
+//confirmarCompra
+// necesito un idCompra en el body
+app.put('/confirmarCompra', carritoController.confirmarCompra)
+
+//consultarCompra
+app.get('/consultarCompra/:idCompra', carritoController.consultarCompra)
+
+//solicitar compras usuario
+app.get('/consultarComprasUsuario/:usuarioSolicitud', carritoController.solicitarComprasUsuario)
+
+//eliminar compra
+app.delete('/eliminarCompra/:idCompra', carritoController.eliminarCompra)
 
 app.listen(3000, () => {
     console.log('Servidor escuchando en el puerto http://localhost:3000');
