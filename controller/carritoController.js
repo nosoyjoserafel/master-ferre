@@ -2,6 +2,9 @@ const fs = require('fs');
 const path = require('node:path');
 const Carrito = require('../model/Carrito');
 
+let cantidadCompras = 0;
+
+
 function agregarProductoCarrito(req, res) {
     const { usuario, idProducto, cantidad } = req.body;
     fs.readFile(path.join(__dirname, '..', 'bd', 'carrito.txt'), (err, data) => {
@@ -91,7 +94,7 @@ function eliminarProductoCarrito(req, res) {
 // Funciones de solicitud de compra
 function solicitarCompra(req, res) {
     const { usuarioSolicitud } = req.body;
-    fs.readFile(path.join(__dirname, '..', 'data', 'carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
             res.json('Error al solicitar compra');
@@ -104,8 +107,8 @@ function solicitarCompra(req, res) {
                 res.status(404).json('Usuario no encontrado');
                 return;
             }
-            const compra = { id: cantidadCompras, ...carrito, estado: 'solicitado' };
-            fs.readFile(path.join(__dirname, '..', 'data', 'compras.txt'), (err, data) => {
+            const compra = { id: cantidadCompras, ...carrito, estado: 'solicitado', fecha: new Date() };
+            fs.readFile(path.join(__dirname, '..', 'bd', 'compras.txt'), (err, data) => {
                 if (err) {
                     console.error(err)
                 }
@@ -114,7 +117,7 @@ function solicitarCompra(req, res) {
                     compras.push(compra);
                     cantidadCompras++;
                     const comprasString = JSON.stringify(compras);
-                    fs.writeFile(path.join(__dirname, '..', 'data', 'compras.txt'), comprasString, (err) => {
+                    fs.writeFile(path.join(__dirname, '..', 'bd', 'compras.txt'), comprasString, (err) => {
                         if (err) {
                             console.error(err);
                         }
@@ -122,7 +125,7 @@ function solicitarCompra(req, res) {
                     //eliminar carrito solicitado
                     carritos = carritos.filter((carrito) => carrito.usuario !== usuarioSolicitud);
                     const carritosString = JSON.stringify(carritos);
-                    fs.writeFile(path.join(__dirname, '..', 'data', 'carrito.txt'), carritosString, (err) => {
+                    fs.writeFile(path.join(__dirname, '..', 'bd', 'carrito.txt'), carritosString, (err) => {
                         if (err) {
                             console.error(err);
                         }
@@ -137,7 +140,7 @@ function solicitarCompra(req, res) {
 //confirmar compra (realizo pago)
 function confirmarCompra(req, res) {
     const { idCompra } = req.body;
-    fs.readFile(path.join(__dirname, '..', 'data', 'compras.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'compras.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -148,7 +151,7 @@ function confirmarCompra(req, res) {
             const compraPreString = { ...compra, estado: 'pagado' };
             compras.push(compraPreString);
             const comprasString = JSON.stringify(compras);
-            fs.writeFile(path.join(__dirname, '..', 'data', 'compras.txt'), comprasString, (err) => {
+            fs.writeFile(path.join(__dirname, '..', 'bd', 'compras.txt'), comprasString, (err) => {
                 if (err) {
                     console.error(err);
                 }
@@ -162,7 +165,7 @@ function confirmarCompra(req, res) {
 function consultarCompra(req, res) {
     const idCompra = Number(req.params.idCompra);
 
-    fs.readFile(path.join(__dirname, '..', 'data', 'compras.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'compras.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -177,7 +180,7 @@ function consultarCompra(req, res) {
 
 function solicitarComprasUsuario(req, res) {
     const { usuarioSolicitud } = req.params;
-    fs.readFile(path.join(__dirname, '..', 'data', 'compras.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'compras.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -193,7 +196,7 @@ function solicitarComprasUsuario(req, res) {
 //funcion para eliminar compra
 function eliminarCompra(req, res) {
     const idCompra = Number(req.params.idCompra);
-    fs.readFile(path.join(__dirname, '..', 'data', 'compras.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'compras.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -201,7 +204,7 @@ function eliminarCompra(req, res) {
             let compras = JSON.parse(data);
             compras = compras.filter((compra) => compra.id !== idCompra);
             const compraString = JSON.stringify(compras);
-            fs.writeFile(path.join(__dirname, '..', 'data', 'compras.txt'), compraString, (err) => {
+            fs.writeFile(path.join(__dirname, '..', 'bd', 'compras.txt'), compraString, (err) => {
                 if (err) {
                     console.error(err);
                 }

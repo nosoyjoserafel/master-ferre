@@ -179,6 +179,10 @@ app.put('/modifyCart', carritoController.modificarCarrito)
 app.delete('/deleteFromCart', carritoController.eliminarProductoCarrito)
 
 //Solicitar compra
+app.get('/compras', (req, res) => {
+    res.sendFile(path.join(__dirname + '/view/compras.html'))
+});
+
 // necesito un usuarioSolicitud en el body
 app.put('/solicitarCompra', carritoController.solicitarCompra)
 

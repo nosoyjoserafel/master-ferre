@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Compras - MasterFerre</title>
+  </head>
+  <body>
+    <!-- menu -->
+
+    <!-- contenido -->
+    <h2>Confirmar Compra</h2>
+    <section id="formPagar">
+      <label for="idCompra">ID Compra</label>
+      <input type="number" min="0" id="idCompra" name="idCompra" />
+      <button id="botonPagarCompra">Pagar Compra</button>
+    </section>
+
+    <h1>Compras de Matias_404</h1>
+    <section id="comprasSection"></section>
+  </body>
+  <script>
+    const USUARIO = "matias_404";
+
+    // Obtener los datos de las compras
+    function generarHTMLCompras(compras) {
+      const comprasHTML = compras.map((compra) => {
+        return `
+          <section>
+            <h1>Compra: ${compra.id}</h1>
+            <strong>Estatus: ${compra.estado}</strong>
+            <p>Fecha: ${compra.fecha}</p>
+            <h2>Productos</h2>
+            <ul>
+              ${compra.productos
+                .map((producto) => `<li>${producto.idProducto}</li>`)
+                .join("")}
+            </ul>
+          </section>
+        `;
+      });
+      let comprasSection = document.getElementById("comprasSection");
+      comprasSection.innerHTML += comprasHTML.join("");
+    }
+
+    async function getCompras() {
+      const response = await fetch(`/consultarComprasUsuario/${USUARIO}`);
+      const data = await response.json();
+      generarHTMLCompras(data);
+    }
+
+    getCompras();
+
+    //pagarCompra
+    async function pagarCompra(idCompraa) {
+      const response = await fetch("/confirmarCompra", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idCompra: Number(idCompraa) }),
+      });
+      const data = await response.json();
+      console.log(data);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document
+        .getElementById("botonPagarCompra")
+        .addEventListener("click", function (event) {
+          const idCompra = document.getElementById("idCompra").value;
+          alert("Compra pagada");
+          pagarCompra(idCompra);
+        });
+    });
+  </script>
+</html>
