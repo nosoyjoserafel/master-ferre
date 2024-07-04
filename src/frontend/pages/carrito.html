@@ -23,7 +23,10 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/buscar-usuario">Usuarios</a>
-                </li>        
+                </li>      
+                <li class="nav-item">
+                    <a class="nav-link" href="/registrar-productos">Registrar productos</a>
+                </li>  
             </ul>
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
@@ -77,7 +80,31 @@
                     </div>
                 </div>
             </div>
-            <div id="carrito"></div>
+            <div id="pedido" class="col-md-4">
+                <div class="card radius">
+                    <div class="card-body bg-primary " style="color: white;">
+                        <h5 class="card-title">Resumen del pedido</h5>
+                    </div>
+                    <ul class="container w-75">
+                        <li class="list-group-item d-flex justify-content-between align-items-center ">
+                            Subtotal
+                            <span id="subtotal" class="">$0.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center ">
+                            IVA
+                            <span id="iva" class="">$0.00</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center fw-bold">
+                            Total
+                            <span id="total" class="">$0.00</span>
+                        </li>
+                    </ul>
+
+                    <div class="card-body container w-50">
+                        <button class="btn btn-primary w-100">Realizar Pedido</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -105,6 +132,8 @@
                 // Clear any existing content in the container (optional)
                 productContainer.innerHTML = ''; 
 
+                let subtotal = 0;
+
                 cartData.productos.forEach(async (producto) => {
                 const productResponse = await fetch('/productos')
 
@@ -112,6 +141,10 @@
                     const productsData = await productResponse.json();
                     const productData = productsData.find(product => producto.idProducto === product.id);
                     console.log(productData);
+
+                    // Calculate the subtotal
+                    subtotal += productData.precio * producto.cantidad;
+
                     // Create the HTML element for the product
                     const productCard = document.createElement('div');
                     productCard.classList.add('col-md-4');
@@ -200,6 +233,15 @@
 
                     // Append the product card to the container element
                     productContainer.appendChild(productCard);
+
+                    const iva = subtotal * 0.16; // Ajusta el porcentaje de IVA según sea necesario
+                    const total = subtotal + iva;
+
+                    // Actualizar el HTML
+                    document.querySelector('#subtotal').textContent = `$${subtotal.toFixed(2)}`;
+                    document.querySelector('#iva').textContent = `$${iva.toFixed(2)}`;
+                    document.querySelector('#total').textContent = `$${total.toFixed(2)}`;
+
                 } else {
                     console.error('Error fetching product:', productResponse.status);
                 }
@@ -207,13 +249,35 @@
             } else {
                 console.error('Error fetching cart:', response.status);
             }
+        }
+
+        async function getCartSummary(usuario) {
+            const response = await fetch(`/ruta-para-mostrar-carrito?usuario=${usuario}`);
+            if (response.ok) {
+                const carrito = await response.json();
+                let subtotal = 0;
+                carrito.productos.forEach(producto => {
+                    // Asumiendo que cada producto tiene un precio, ajusta según tu estructura
+                    subtotal += producto.precio * producto.cantidad;
+                });
+                const iva = subtotal * 0.21; // Ajusta el porcentaje de IVA según sea necesario
+                const total = subtotal + iva;
+
+                // Actualizar el HTML
+                document.querySelector('#subtotal').textContent = `$${subtotal.toFixed(2)}`;
+                document.querySelector('#iva').textContent = `$${iva.toFixed(2)}`;
+                document.querySelector('#total').textContent = `$${total.toFixed(2)}`;
+            } else {
+                console.error('Error fetching cart:', response.status);
             }
+        }
+        // Example usage
+        const usuario = 'matias_404';
+        getCart(usuario);
 
-            // Example usage
-            const usuario = 'matias_404';
-            getCart(usuario);
+        getCartSummary(usuario);
 
 
-        </script>
+    </script>
 </body>
 </html>

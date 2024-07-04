@@ -3,9 +3,20 @@
   height: 15vw;
   object-fit: cover;
 }
+.bg-primary {
+  background-color: #ff8045 !important;
+}
+
+ul.container li {
+  margin-top: 16px;
+}
 
 #carrito .card {
   margin-bottom: 16px;
+}
+
+.card-body {
+  border-radius: 5px;
 }
 
 :root {
