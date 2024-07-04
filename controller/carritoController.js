@@ -1,10 +1,10 @@
 const fs = require('fs');
 const path = require('node:path');
-const Carrito = require('../services/Carrito');
+const Carrito = require('../model/Carrito');
 
 function agregarProductoCarrito(req, res){
     const { usuario, idProducto, cantidad } = req.body;
-    fs.readFile(path.join(__dirname, '..','data','carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -18,7 +18,7 @@ function agregarProductoCarrito(req, res){
                 carritos.push({ usuario, productos: [{ idProducto, cantidad }] });
             }
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, '..','data','carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, '..','bd','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }
@@ -30,7 +30,7 @@ function agregarProductoCarrito(req, res){
 
 function mostrarCarrito(req, res){
     const { usuarioSolicitud } = req.body;
-    fs.readFile(path.join(__dirname, '..','data','carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -46,7 +46,7 @@ function mostrarCarrito(req, res){
 
 function modificarCarrito(req, res){
     const { usuarioSolicitud } = req.body;
-    fs.readFile(path.join(__dirname, '..','data','carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -57,7 +57,7 @@ function modificarCarrito(req, res){
                 return { idProducto: producto.idProducto, cantidad: producto.cantidad + 1 };
             });
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, '..','data','carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, '..','bd','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }
@@ -69,7 +69,7 @@ function modificarCarrito(req, res){
 
 function eliminarProductoCarrito(req, res){
     const { usuarioSolicitud, idProducto } = req.body;
-    fs.readFile(path.join(__dirname, '..','data','carrito.txt'), (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','carrito.txt'), (err, data) => {
         if (err) {
             console.error(err)
         }
@@ -78,7 +78,7 @@ function eliminarProductoCarrito(req, res){
             const carrito = carritos.filter((carrito) => carrito.usuario === usuarioSolicitud)[0];
             carrito.productos = carrito.productos.filter((producto) => producto.idProducto !== idProducto);
             const carritosString = JSON.stringify(carritos);
-            fs.writeFile(path.join(__dirname, '..','data','carrito.txt'), carritosString, (err) => {
+            fs.writeFile(path.join(__dirname, '..','bd','carrito.txt'), carritosString, (err) => {
                 if (err) {
                     console.error(err);
                 }

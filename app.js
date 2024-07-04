@@ -2,16 +2,16 @@ const express = require('express');
 const app = express();
 const path = require('node:path');
 const fs = require('node:fs');
-const Producto = require('./src/backend/services/Producto');
-const Cliente = require('./src/backend/services/Cliente');
-const Empleado = require('./src/backend/services/Empleado');
-const Catalogo = require('./src/backend/services/Catalogo');
+const Producto = require('./model/Producto');
+const Cliente = require('./model/Cliente');
+const Empleado = require('./model/Empleado');
+const Catalogo = require('./model/Catalogo');
 const e = require('express');
-const upload = require('./src/backend/libs/upload');
-const productoController = require('./src/backend/controllers/productoController');
-const catalogoController = require('./src/backend/controllers/catalogoController');
-const usuarioController = require('./src/backend/controllers/usuarioController');
-const carritoController = require('./src/backend/controllers/carritoController');
+const upload = require('./model/libs/upload');
+const productoController = require('./controller/productoController');
+const catalogoController = require('./controller/catalogoController');
+const usuarioController = require('./controller/usuarioController');
+const carritoController = require('./controller/carritoController');
 app.use(express.static('public'));
 app.use(express.static('files'));
 app.use(express.static('pages'));
@@ -22,12 +22,12 @@ app.use(express.urlencoded({ extended: true }));
 
 //Respuestas del servidor cuando se entra por primera vez
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
+    res.sendFile(path.join(__dirname + '/view/main.html'));
 });
 
 //Respuesta del servidor al entrar a una pagina y querer volver al main
 app.get('/main', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
+    res.sendFile(path.join(__dirname + '/view/main.html'));
 });
 
 app.put('/main', (req, res) => {
@@ -45,7 +45,7 @@ app.delete('/main', async (req,res) => {
 
 //Respuesta del servidor ante solicitud de ir a pagina registrar producto
 app.get('/registrar-productos', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto.html'));
+    res.sendFile(path.join(__dirname + '/view/registrar-producto.html'));
 });
 
 
@@ -61,7 +61,7 @@ app.get('/buscar-producto', async (req, res) => {
             res.status(500).send("Error interno del servidor");
         }
     } else {
-        res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-producto.html'));
+        res.sendFile(path.join(__dirname + '/view/buscar-producto.html'));
     }
 });
 
@@ -96,7 +96,7 @@ app.delete('/buscar-producto/', async (req,res) => {
 });
 
 app.get('/registrar-usuario', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-usuario.html'));
+    res.sendFile(path.join(__dirname + '/view/registrar-usuario.html'));
 });
 
 app.get('/buscar-usuario', async (req, res) => {    
@@ -110,7 +110,7 @@ app.get('/buscar-usuario', async (req, res) => {
             res.status(500).send("Error interno del servidor");
         }
     } else {
-        res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
+        res.sendFile(path.join(__dirname + '/view/buscar-usuario.html'));
     }
 });
 
@@ -139,12 +139,12 @@ app.delete('/buscar-usuario', async (req, res) => {
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
 app.get('/registrar-producto-catalogo', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto-catalogo.html'));
+    res.sendFile(path.join(__dirname + '/view/registrar-producto-catalogo.html'));
 });
 
 //Respuesta del servidor ante solicitud de ir a pagina de carrito
 app.get('/carrito', (req, res) => {
-    res.sendFile(path.join(__dirname + '/src/frontend/pages/carrito.html'));
+    res.sendFile(path.join(__dirname + '/view/carrito.html'));
 });
 
 //Respuestas del servidor al ejecutar acciones de tipo CRUD en distintas paginas

@@ -1,6 +1,6 @@
 const fs = require('node:fs');
 const path = require('node:path');
-const Producto = require('../services/Producto');
+const Producto = require('../model/Producto');
 
 function resgistrarProductoCatalogo(req, res){
     if (!req.body.id) {
@@ -8,7 +8,7 @@ function resgistrarProductoCatalogo(req, res){
     }    
     const producto = `${JSON.stringify(req.body)}\n`
 
-    fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         const lineas = data.split('\n'); // divide el contenido por líneas
@@ -18,7 +18,7 @@ function resgistrarProductoCatalogo(req, res){
             if (linea !== ""){
                 let p = JSON.parse(linea);
                 if (p.id === req.body.id) {
-                    fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto, (err) => {
+                    fs.appendFile(path.join(__dirname, '..','bd','catalogo.txt'), producto, (err) => {
                         if (err) throw err;
                     });
                     foundFlag = true
@@ -35,7 +35,7 @@ function resgistrarProductoCatalogo(req, res){
 }
 
 function mostrarProductoCatalogo(req, res){
-    fs.readFile(path.join(__dirname, '..','data','catalogo.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','catalogo.txt'), 'utf8', (err, data) => {
         if (err) throw err
 
         let lineas = data.split('\n');
@@ -64,7 +64,7 @@ function modificarProductoCatalogo(req, res) {
     const productoId = req.body.id;
     const datosModificados = req.body;
 
-    fs.readFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'catalogo.txt'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error al leer el archivo de productos');
@@ -89,7 +89,7 @@ function modificarProductoCatalogo(req, res) {
 
         const nuevoContenido = productos.map(p => JSON.stringify(p)).join('\n')+'\n';
 
-        fs.writeFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), nuevoContenido, 'utf8', (err) => {
+        fs.writeFile(path.join(__dirname, '..', 'bd', 'catalogo.txt'), nuevoContenido, 'utf8', (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Error al escribir en el archivo de productos');
@@ -101,7 +101,7 @@ function modificarProductoCatalogo(req, res) {
 
 async function eliminarProductoCatalogo(idProducto) {    
     try {
-        const filePath = path.join(__dirname, '..', 'data', 'catalogo.txt');
+        const filePath = path.join(__dirname, '..', 'bd', 'catalogo.txt');
         const data = await leerArchivoComoPromesa(filePath);
         const lineas = data.split('\n');        
         let nuevaData = lineas.filter(linea => {
@@ -110,7 +110,7 @@ async function eliminarProductoCatalogo(idProducto) {
                 return p.id !== idProducto;
             }
         }).join('\n');
-        fs.writeFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), nuevaData, (err) => {
+        fs.writeFile(path.join(__dirname, '..', 'bd', 'catalogo.txt'), nuevaData, (err) => {
             if (err) throw err;
         });
     } catch (err) {

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('node:path');
-const Cliente = require('../services/Cliente');
+const Cliente = require('../model/Cliente');
 
 function registrarUsuario(req, res) {
     if (!req.body.usuario || !req.body.contrasenia || !req.body.cedula || !req.body.telefono || !req.body.direccion) {
@@ -8,7 +8,7 @@ function registrarUsuario(req, res) {
     }
     const newUser = JSON.parse(JSON.stringify(req.body));
 
-    fs.readFile(path.join(__dirname, '..','data','usuarios.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..','bd','usuarios.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
         const lines = data.split('\n');
@@ -26,7 +26,7 @@ function registrarUsuario(req, res) {
             }
         }
         // Si llegamos aquí, el usuario no existe, así que agregamos el nuevo usuario
-        fs.appendFile(path.join(__dirname, '..','data','usuarios.txt'), JSON.stringify(newUser)+'\n', (err) => {
+        fs.appendFile(path.join(__dirname, '..','bd','usuarios.txt'), JSON.stringify(newUser)+'\n', (err) => {
             if (err) throw err;
             res.status(200).send('Usuario registrado con éxito');
         });
@@ -45,7 +45,7 @@ function leerArchivoComoPromesa(rutaArchivo) {
 async function buscarUsuario(cedulaBuscada) {
     let usuario = null;
     try {
-        const data = await leerArchivoComoPromesa(path.join(__dirname, '..', 'data', 'usuarios.txt'));
+        const data = await leerArchivoComoPromesa(path.join(__dirname, '..', 'bd', 'usuarios.txt'));
         let lineas = data.split('\n');
 
         lineas.forEach(linea => {
@@ -64,7 +64,7 @@ async function buscarUsuario(cedulaBuscada) {
 
 async function modificarUsuario(req,res) {
     let datosActualizados = req.body;
-    fs.readFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), 'utf8', (err, data) => {
+    fs.readFile(path.join(__dirname, '..', 'bd', 'usuarios.txt'), 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error al leer el archivo de productos');
@@ -89,7 +89,7 @@ async function modificarUsuario(req,res) {
 
         const nuevoContenido = usuarios.map(u => JSON.stringify(u)).join('\n')+'\n';
 
-        fs.writeFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), nuevoContenido, 'utf8', (err) => {
+        fs.writeFile(path.join(__dirname, '..', 'bd', 'usuarios.txt'), nuevoContenido, 'utf8', (err) => {
             if (err) {
                 console.error(err);
                 return res.status(500).send('Error al escribir en el archivo de usuarios');
@@ -101,7 +101,7 @@ async function modificarUsuario(req,res) {
 
 async function eliminarUsuario(cedulaBuscada) {
     try {
-        fs.readFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), 'utf8', (err, data) => {
+        fs.readFile(path.join(__dirname, '..', 'bd', 'usuarios.txt'), 'utf8', (err, data) => {
             if (err) throw err;
             let lineas = data.split('\n');            
             let nuevaData = lineas.filter(linea => {
@@ -110,7 +110,7 @@ async function eliminarUsuario(cedulaBuscada) {
                     return usuario.cedula !== cedulaBuscada;
                 }
             }).join('\n');
-            fs.writeFile(path.join(__dirname, '..', 'data', 'usuarios.txt'), nuevaData, (err) => {
+            fs.writeFile(path.join(__dirname, '..', 'bd', 'usuarios.txt'), nuevaData, (err) => {
                 if (err) throw err;
             });
         });
