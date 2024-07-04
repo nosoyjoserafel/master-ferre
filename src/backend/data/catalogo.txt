@@ -1,2 +1,1 @@
-{"id":"555","nombre":"martillo","categoria":"herramienta","precio":"8"}
-{"id":"444","nombre":"pepa","categoria":"pepe","precio":"8"}
+{"id":"555","nombre":"martillo","categoria":"herramienta","precio":"8", "imagen":"destornillador.png"}

@@ -46,7 +46,7 @@ async function buscarProducto(idBuscado){
             if (linea !== ""){
                 let p = JSON.parse(linea);
                 if (p.id === idBuscado) {
-                    producto = new Producto(p.id, p.nombre, p.categoria, p.precio);
+                    producto = new Producto(p.id, p.nombre, p.categoria, p.precio, p.imagen);
                 }
             }
         });
@@ -66,7 +66,7 @@ function mostrarProducto(req, res){
             if (linea === "")
                 return;
             let p = JSON.parse(linea);
-            return new Producto(p.id, p.nombre, p.categoria, p.precio);
+            return new Producto(p.id, p.nombre, p.categoria, p.precio, p.imagen);
         })
 
         res.json(productos);
@@ -90,9 +90,9 @@ function modificarProducto(req, res) {
                 let p = JSON.parse(linea);            
                 if (p.id === productoId) {
                     productosModificados = true;
-                    return new Producto(datosModificados.id, datosModificados.nombre, datosModificados.categoria, datosModificados.precio);
+                    return new Producto(datosModificados.id, datosModificados.nombre, datosModificados.categoria, datosModificados.precio, datosModificados.imagen);
                 }
-                return new Producto(p.id, p.nombre, p.categoria, p.precio);
+                return new Producto(p.id, p.nombre, p.categoria, p.precio, p.imagen);
             }
         }).filter(Boolean);
 

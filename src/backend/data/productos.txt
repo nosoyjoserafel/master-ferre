@@ -1,2 +1,2 @@
-{"id":"555","nombre":"martillo","categoria":"herramineta","precio":"9"}
-{"id":"444","nombre":"pepe","categoria":"pepe","precio":"4"}
+{"id":"555","nombre":"martillo","categoria":"herramineta","precio":"9", "imagen":"destornillador.png"}
+{"id":"444","nombre":"pepe","categoria":"pepe","precio":"4", "imagen":"destornillador.png"}
