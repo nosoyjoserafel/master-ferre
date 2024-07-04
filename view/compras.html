@@ -15,6 +15,12 @@
       <input type="number" min="0" id="idCompra" name="idCompra" />
       <button id="botonPagarCompra">Pagar Compra</button>
     </section>
+    <h2>Eliminar Compra</h2>
+    <section id="formEliminar">
+      <label for="idCompra">ID Compra</label>
+      <input type="number" min="0" id="idEliminar" name="idEliminar" />
+      <button id="botonEliminarCompra">Eliminar Compra</button>
+    </section>
 
     <h1>Compras de Matias_404</h1>
     <section id="comprasSection"></section>
@@ -71,6 +77,28 @@
           const idCompra = document.getElementById("idCompra").value;
           alert("Compra pagada");
           pagarCompra(idCompra);
+        });
+    });
+
+    //eliminarCompra
+    async function eliminarCompra(idCompra) {
+      const response = await fetch(`/eliminarCompra/${Number(idCompra)}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      document
+        .getElementById("botonEliminarCompra")
+        .addEventListener("click", function (event) {
+          const idCompra = document.getElementById("idEliminar").value;
+          alert("Compra eliminada");
+          eliminarCompra(idCompra);
         });
     });
   </script>
