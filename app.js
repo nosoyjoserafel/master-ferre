@@ -156,7 +156,9 @@ app.post('/registrar-producto', upload.single("imagen"),productoController.resgi
 app.get('/productos', productoController.mostrarProducto)
 
 //para buscar productos y registrarlos en el catalogo si existen (entregable catalogo, se buscan por su id)
-app.post('/registrar-producto-catalogo', catalogoController.resgistrarProductoCatalogo);
+app.post('/registrar-producto-catalogo', (req,res) =>{
+    catalogoController.resgistrarProductoCatalogo(req,res)
+});
 
 //para mostrar productos en catalogo (entregable catalogo)
 app.get('/catalogo', catalogoController.mostrarProductoCatalogo);

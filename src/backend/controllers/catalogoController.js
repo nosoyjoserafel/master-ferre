@@ -5,8 +5,7 @@ const Producto = require('../services/Producto');
 function resgistrarProductoCatalogo(req, res){
     if (!req.body.id) {
         return res.status(400).send('El campo ID es requerido');
-    }
-
+    }    
     const producto = `${JSON.stringify(req.body)}\n`
 
     fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
@@ -16,13 +15,15 @@ function resgistrarProductoCatalogo(req, res){
         let foundFlag = false
 
         lineas.forEach(linea => {
-            let p = JSON.parse(linea);
-            if (p.id === req.body.id) {
-                fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto, (err) => {
-                    if (err) throw err;
-                });
-                foundFlag = true
-                return res.status(200).send('Producto encontrado') //prueba de estado de respuesta
+            if (linea !== ""){
+                let p = JSON.parse(linea);
+                if (p.id === req.body.id) {
+                    fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto, (err) => {
+                        if (err) throw err;
+                    });
+                    foundFlag = true
+                    return res.status(200).send('Producto encontrado') //prueba de estado de respuesta
+                }
             }
         })
         if (!foundFlag) {
