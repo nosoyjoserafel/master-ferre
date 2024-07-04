@@ -22,7 +22,7 @@
         margin: 15% auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 80%;
+        width: 60%;
         }
 
         .close-btn {
@@ -106,19 +106,38 @@
         </div>
         <div class="col-md-6 align-self-end text-end">
             <button class="btn btn-primary" type="button" id="modificarProductoBtn">Modificar producto</button>
-            <div id="modificarProductoFrame" class="modal" style="display:none;">
+            <div id="modificarProductoFrame" class="modal col-6" style="display:none;">
               <div class="modal-content">
                 <span class="close-btn">&times;</span>
-                <form id="modificarProductoForm">
-                    <label for="idProducto">ID: </label>
-                    <h2 id="idProducto"></h2>
-                    <label for="nombreProducto">Nombre:</label>
-                  <input type="text" id="nombreProducto" name="nombreProducto">
-                  <label for="categoriaProducto">Categoria:</label>
-                  <input type="text" id="categoriaProducto" name="categoriaProducto">
-                  <label for="precio">Precio:</label>
-                  <input type="number" id="precioProducto" name="precioProducto">
-                  <button type="submit">Guardar cambios</button>
+                <form id="modificarProductoForm" class="container col-md-8 offset-md-2 mt-5">
+                                    
+                    <div class="row mb-3">
+                        <div class="col-md-8 form-group">
+                            <label for="nombreProducto" class="form-label">Nombre:</label>
+                            <input type="text" id="nombreProducto" name="nombreProducto" class="form-control">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="idProducto" class="form-label">ID: </label>
+                            <h2 id="idProducto" class="h2"></h2>
+                        </div>
+                    </div>
+                
+                    <div class="row mb-3">
+                        <div class="col-md-8 form-group">
+                            <label for="categoriaProducto" class="form-label">Categoria:</label>
+                            <input type="text" id="categoriaProducto" name="categoriaProducto" class="form-control">
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label for="precioProducto" class="form-label">Precio:</label>
+                            <input type="number" id="precioProducto" name="precioProducto" class="form-control">
+                        </div>
+                    </div>
+                
+                    <div class="row">
+                        <div class="col-md-4 offset-8 text-center">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar</button>
+                        </div>
+                    </div>
                 </form>
               </div>
             </div>
