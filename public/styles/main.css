@@ -24,6 +24,17 @@ ul.container li {
   border-radius: 5px;
 }
 
+#registrar-usuario-form .btn{
+  width: 100% !important;
+}
+#registrar-usuario-form .row{
+  margin-bottom: 16px;
+}
+
+#registrar-usuario-form{
+  padding: 16px;
+}
+
 :root {
   --bs-primary: #ff8045 !important;
   --bs-blue: #ff8045 !important;
