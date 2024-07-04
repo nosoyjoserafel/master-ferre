@@ -1,2 +1,1 @@
-nombre, apellido, usuario, contraseña, cedula, telefono, direccion, email, condicion
-Matias, Silveira, matias123, 123, 123, 456, x, matias@gmail.com, Cliente
+{"nombre":"Jose","apellido":"Tablante","usuario":"mati123","contrasenia":"pepe","cedula":"12345","direccion":"xxx","telefono":"12345","condicion":"Cliente","email":"mati123@gmail.com"}

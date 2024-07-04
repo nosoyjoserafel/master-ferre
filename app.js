@@ -30,6 +30,19 @@ app.get('/main', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/main.html'));
 });
 
+app.put('/main', (req, res) => {
+    try{
+        catalogoController.modificarProductoCatalogo(req, res);
+    }catch(error){
+        console.error("Error al modificar producto:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+app.delete('/main', async (req,res) => {
+    await catalogoController.eliminarProductoCatalogo(req.body.id);
+});
+
 //Respuesta del servidor ante solicitud de ir a pagina registrar producto
 app.get('/registrar-productos', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-producto.html'));
@@ -52,13 +65,41 @@ app.get('/buscar-producto', async (req, res) => {
     }
 });
 
-//Respuesta del servidor ante solicitud de ir a pagina de registrar usuario
+app.put('/buscar-producto/', async (req,res) => {
+    const id = req.query.id;    
+    if (id) {
+        try {
+            productoController.modificarProducto(req,res);
+        } catch (error) {
+            console.error("Error al modificar producto:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
+app.delete('/buscar-producto/', async (req,res) => {
+    const id = req.query.id;    
+    if (id) {
+        try {
+            let found = await productoController.eliminarProducto(id);
+            if(found){
+                res.status(200).send("Producto eliminado con exito");
+            }
+            else{
+                res.status(404).send("Producto no encontrado");
+            }
+        } catch (error) {
+            console.error("Error al eliminar producto:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
 app.get('/registrar-usuario', (req, res) => {
     res.sendFile(path.join(__dirname + '/src/frontend/pages/registrar-usuario.html'));
 });
 
-//Respuesta del servidor ante solicitud de ir a pagina de buscar usuario
-app.get('/buscar-usuario', async (req, res) => {
+app.get('/buscar-usuario', async (req, res) => {    
     const cedula = req.query.cedula;
     if (cedula) {    
         try {
@@ -72,6 +113,29 @@ app.get('/buscar-usuario', async (req, res) => {
         res.sendFile(path.join(__dirname + '/src/frontend/pages/buscar-usuario.html'));
     }
 });
+
+app.put('/buscar-usuario', async (req, res) => {    
+    try {
+        await usuarioController.modificarUsuario(req,res);
+    } catch (error) {
+        console.error("Error al buscar usuario:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+app.delete('/buscar-usuario', async (req, res) => {    
+    const cedula = req.query.cedula;
+    if (cedula) {    
+        try {
+            await usuarioController.eliminarUsuario(cedula);
+            res.status(200).send("Usuario eliminado con exito");
+        } catch (error) {
+            console.error("Error al buscar usuario:", error);
+            res.status(500).send("Error interno del servidor");
+        }
+    }
+});
+
 
 //Respuesta del servidor ante solicitud de ir a pagina de registrar producto en catalogo
 app.get('/registrar-producto-catalogo', (req, res) => {

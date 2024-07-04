@@ -7,18 +7,18 @@ function resgistrarProductoCatalogo(req, res){
         return res.status(400).send('El campo ID es requerido');
     }
 
+    const producto = `${JSON.stringify(req.body)}\n`
+
     fs.readFile(path.join(__dirname, '..','data','productos.txt'), 'utf8', (err, data) => {
         if (err) throw err;
 
-        let lineas = data.split('\n'); // divide el contenido por líneas
-        lineas.shift(); // elimina la primera línea (cabecera)
+        const lineas = data.split('\n'); // divide el contenido por líneas
         let foundFlag = false
 
         lineas.forEach(linea => {
-            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
-            if (id === req.body.id) {
-                let producto = new Producto(id, nombre, categoria, precio, imagen)
-                fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto.toString(), (err) => {
+            let p = JSON.parse(linea);
+            if (p.id === req.body.id) {
+                fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto, (err) => {
                     if (err) throw err;
                 });
                 foundFlag = true
@@ -37,46 +37,89 @@ function mostrarProductoCatalogo(req, res){
     fs.readFile(path.join(__dirname, '..','data','catalogo.txt'), 'utf8', (err, data) => {
         if (err) throw err
 
-        let lineas = data.split('\n'); // divide el contenido por líneas
-        lineas.shift(); // elimina la primera línea (cabecera)
+        let lineas = data.split('\n');
 
         let productos = lineas.map(linea => {
-            let [id, nombre, categoria, precio, imagen] = linea.split(",").map(item => item.trim())
-            return new Producto(id, nombre, categoria, precio, imagen)
+            if (linea !== ""){
+                let p = JSON.parse(linea)
+                return new Producto(p.id, p.nombre, p.categoria, p.precio)
+            }
         })
 
         res.json(productos);
     });
 }
 
-function modificarProductoCatalogo(req, res){
-    if (!req.body.id) {
-        return res.status(400).send('El campo ID es requerido');
-    }    
+function leerArchivoComoPromesa(rutaArchivo) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(rutaArchivo, 'utf8', (err, data) => {
+            if (err) reject(err);
+            else resolve(data);
+        });
+    });
+}
 
-    let lineas = data.split('\n'); // divide el contenido por líneas
-    lineas.shift(); // elimina la primera línea (cabecera)
-    let foundFlag = false
+function modificarProductoCatalogo(req, res) {
+    const productoId = req.body.id;
+    const datosModificados = req.body;
 
-    lineas.forEach(linea => {
-    let [id, nombre, categoria, precio] = linea.split(",").map(item => item.trim())
-        if (id === req.body.id) {
-            let producto = new Producto(id, nombre, categoria, precio)
-            fs.appendFile(path.join(__dirname, '..','data','catalogo.txt'), producto.toString(), (err) => {
-                if (err) throw err;
-            });
-            foundFlag = true
-            return res.status(200).send('Producto encontrado') //prueba de estado de respuesta
+    fs.readFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error al leer el archivo de productos');
         }
-    })
-    if (!foundFlag) {
-        console.log('Producto no encontrado');
-        return res.status(404).send('Producto no encontrado') //prueba de estado de respuesta
-    }
 
+        let productosModificados = false;
+        let lineas = data.split('\n');
+        let productos = lineas.map(linea => {
+            if (linea !== "") {
+                let p = JSON.parse(linea);            
+                if (p.id === productoId) {
+                    productosModificados = true;
+                    return new Producto(datosModificados.id, datosModificados.nombre, datosModificados.categoria, datosModificados.precio);
+                }
+                return new Producto(p.id, p.nombre, p.categoria, p.precio);
+            }
+        }).filter(Boolean);
+
+        if (!productosModificados) {
+            return res.status(404).send('Producto no encontrado');
+        }
+
+        const nuevoContenido = productos.map(p => JSON.stringify(p)).join('\n')+'\n';
+
+        fs.writeFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), nuevoContenido, 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Error al escribir en el archivo de productos');
+            }
+            res.send('Producto modificado con éxito');
+        });
+    });
+}
+
+async function eliminarProductoCatalogo(idProducto) {    
+    try {
+        const filePath = path.join(__dirname, '..', 'data', 'catalogo.txt');
+        const data = await leerArchivoComoPromesa(filePath);
+        const lineas = data.split('\n');        
+        let nuevaData = lineas.filter(linea => {
+            if(linea !== ""){
+                let p = JSON.parse(linea);
+                return p.id !== idProducto;
+            }
+        }).join('\n');
+        fs.writeFile(path.join(__dirname, '..', 'data', 'catalogo.txt'), nuevaData, (err) => {
+            if (err) throw err;
+        });
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 module.exports = {
     resgistrarProductoCatalogo,
-    mostrarProductoCatalogo
+    mostrarProductoCatalogo,
+    modificarProductoCatalogo,
+    eliminarProductoCatalogo
 };
