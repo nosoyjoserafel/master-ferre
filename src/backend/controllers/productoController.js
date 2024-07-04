@@ -12,7 +12,7 @@ function leerArchivoComoPromesa(rutaArchivo) {
 }
 
 function resgistrarProducto(req, res) {
-    if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio || !req.body.imagen) {
+    if (!req.body.id || !req.body.nombre || !req.body.categoria || !req.body.precio) {
         return res.status(400).send('Todos los campos son requeridos');
     }
 

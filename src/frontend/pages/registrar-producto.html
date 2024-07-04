@@ -110,7 +110,9 @@
                 nombre: $("#nombre").val(),
                 categoria: $("#categoria").val(),
                 precio: $("#precio").val(),
+                imagen: $("#imagen").val().replace(/^.*[\\\/]/, '')                
             };
+
 
             $.ajax({
                 type: "POST",
