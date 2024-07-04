@@ -1,3 +1,2 @@
-{"id":"555","nombre":"martillo","categoria":"herramineta","precio":"9", "imagen":"destornillador.png"}
-{"id":"444","nombre":"pepe","categoria":"pepe","precio":"4", "imagen":"destornillador.png"}
-{"id":"553","nombre":"Tenaza","categoria":"Herramienta","precio":"20","imagen":"tenaza.png"}
+{"id":"444","nombre":"pepe","categoria":"pepe","precio":"4", "imagen":"/images/destornillador.png"}
+{"id":"553","nombre":"Tenaza","categoria":"Herramienta","precio":"20","imagen":"/images/tenaza.png"}
