@@ -85,55 +85,60 @@
                         </div>
                     </div>
                     <div class="row card"  id="usuario-info">
-                        <!-- <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    Información del Usuario
-                                </div>
-                                <div class="card-body">
-                                    <p class="card-title" id="usuarioNombre">Nombre del Usuario</p>
-                                    <p class="card-text"><strong>Cédula:</strong> <span id="usuarioCedula"></span></p>
-                                    <p class="card-text"><strong>Correo Electrónico:</strong> <span id="usuarioEmail"></span></p>
-                                    <p class="card-text"><strong>Teléfono:</strong> <span id="usuarioTelefono"></span></p>
-                                </div>
-                            </div>
-                        </div> -->
+                        <div class="card-header">
+                            <strong>Información del Usuario</strong>
+                        </div>
+                        <div class="card-body">
+                            <p id="usuario-nombre"></p>
+                            <p id="usuario-apellido"></p>
+                            <p id="usuario-email"></p>
+                            <p id="usuario-nombre-usuario"></p>
+                            <p id="usuario-telefono"></p>
+                            <p id="usuario-direccion"></p>
+                        </div>
                     </div>
                 </div>
             </form>
-
-
-            
-     
-              <!-- <body class="container">
-                 <form id="buscar-usuario-form">
-                      <label for="cedula">Cédula:</label><br>
-                      <input type="number" id="cedula" name="cedula"><br>      
-                      <input type="button" id="buscar" value="Buscar"><br>
-                      <input type="button" id="modificar" value="Modificar"><br>
-                      <input type="button" id="eliminar" value="Eliminar"> 
-                      <br>
-                      <br>
-                      <a href="/main" id="regresar-inicio">Regresar al inicio</a>
-                  </form>        
-              </body> -->
-            <div id="overlay">
-                <form>
-                    <div class="form-container">
-                        <h2>Modificar usuario</h2>
-                        <label for="cedula">Cedula: <input type="text" name="cedula" id="cedula" readonly></label><br>
-                        <label for="nombreModificado">Nombre: <input type="text" name="nombre" id="nombreModificado"></label><br>
-                        <label for="apellidoModificado">Apellido: <input type="text" name="apellido" id="apellidoModificado"></label><br>
-                        <label for="emailModificado">Email: <input type="text" name="email" id="emailModificado"></label><br>
-                        <label for="nombreUsuarioModificado">Nombre de usuario: <input type="text" name="nombreUsuario" id="nombreUsuarioModificado"></label><br>
-                        <label for="contraseñaModificada">Contraseña: <input type="text" name="contraseña" id="contraseñaModificada"></label><br>
-                        <label for="telefonoModificado">Telefono: <input type="number" name="telefono" id="telefonoModificado"></label><br>
-                        <label for="direccionModificada">Direccion: <input type="text" name="direccion" id="direccionModificada"></label><br>
-                        <button type="button" id="saveChanges">Guardar</button>
-                        <button type="button" id="closeOverlay">X</button>
+            <div id="overlay" class="p-4">
+                <form class="form-container bg-light p-3 border rounded">
+                    <h2 class="mb-3">Modificar usuario</h2>
+                    <div class="mb-3">
+                        <label for="cedula" class="form-label">Cedula:</label>
+                        <input type="text" name="cedula" id="cedula" class="form-control" readonly>
                     </div>
+                    <div class="mb-3">
+                        <label for="nombreModificado" class="form-label">Nombre:</label>
+                        <input type="text" name="nombre" id="nombreModificado" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="apellidoModificado" class="form-label">Apellido:</label>
+                        <input type="text" name="apellido" id="apellidoModificado" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailModificado" class="form-label">Email:</label>
+                        <input type="text" name="email" id="emailModificado" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreUsuarioModificado" class="form-label">Nombre de usuario:</label>
+                        <input type="text" name="nombreUsuario" id="nombreUsuarioModificado" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contraseñaModificada" class="form-label">Contraseña:</label>
+                        <input type="text" name="contraseña" id="contraseñaModificada" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefonoModificado" class="form-label">Telefono:</label>
+                        <input type="number" name="telefono" id="telefonoModificado" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="direccionModificada" class="form-label">Direccion:</label>
+                        <input type="text" name="direccion" id="direccionModificada" class="form-control">
+                    </div>
+                    <button type="button" id="saveChanges" class="btn btn-primary">Guardar</button>
+                    <button type="button" id="closeOverlay" class="btn btn-danger">X</button>
                 </form>
             </div>
+
 
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
@@ -149,7 +154,7 @@
                         referencia.parentNode.insertBefore(contenedor, referencia);
                     } else {
                         contenedor.innerHTML = `<div class="card-header">
-                                    Información del Usuario
+                                    <strong>Información del Usuario</strong>
                                 </div>`;
                     }
                     
@@ -159,7 +164,7 @@
                         nombreElemento.id = 'usuario-nombre';
                         contenedor.appendChild(nombreElemento);
                     }
-                    nombreElemento.textContent = `Nombre: ${usuario.nombre}`;
+                    nombreElemento.innerHTML = `<br><strong>Nombre:</strong> ${usuario.nombre}`;
                     
                     var apellidoElemento = document.getElementById('usuario-apellido');
                     if (!apellidoElemento) {
@@ -167,7 +172,7 @@
                         apellidoElemento.id = 'usuario-apellido';
                         contenedor.appendChild(apellidoElemento);
                     }
-                    apellidoElemento.textContent = `Apellido: ${usuario.apellido}`;
+                    apellidoElemento.innerHTML = `<strong>Apellido:</strong> ${usuario.apellido}`;
 
                     var emailElemento = document.getElementById('usuario-email');
                     if (!emailElemento) {
@@ -175,7 +180,7 @@
                         emailElemento.id = 'usuario-email';
                         contenedor.appendChild(emailElemento);
                     }
-                    emailElemento.textContent = `Email: ${usuario.email}`;
+                    emailElemento.innerHTML = `<strong>Email:</strong> ${usuario.email}`;
 
                     var nombreUsuarioElemento = document.getElementById('usuario-nombre-usuario');
                     if (!nombreUsuarioElemento) {
@@ -183,7 +188,7 @@
                         nombreUsuarioElemento.id = 'usuario-nombre-usuario';
                         contenedor.appendChild(nombreUsuarioElemento);
                     }
-                    nombreUsuarioElemento.textContent = `Nombre de usuario: ${usuario.usuario}`;
+                    nombreUsuarioElemento.innerHTML = `<strong>Nombre de usuario:</strong> ${usuario.usuario}`;
 
                     var telefonoElemento = document.getElementById('usuario-telefono');
                     if (!telefonoElemento) {
@@ -191,7 +196,7 @@
                         telefonoElemento.id = 'usuario-telefono';
                         contenedor.appendChild(telefonoElemento);
                     }
-                    telefonoElemento.textContent = `Telefono: ${usuario.telefono}`;
+                    telefonoElemento.innerHTML = `<strong>Telefono:</strong> ${usuario.telefono}`;
 
                     var direccionElemento = document.getElementById('usuario-direccion');
                     if (!direccionElemento) {
@@ -199,7 +204,7 @@
                         direccionElemento.id = 'usuario-direccion';
                         contenedor.appendChild(direccionElemento);
                     }
-                    direccionElemento.textContent = `Direccion: ${usuario.direccion}`;
+                    direccionElemento.innerHTML = `<strong>Direccion:</strong> ${usuario.direccion}`;
                 }                
 
                 window.onload = function() {
